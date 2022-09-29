@@ -11,7 +11,7 @@
 
 ## **Passo2: Configuração**
 - Clonar repositório na pasta desejada. 
-- Via Powershell entrar na pasta PCS-Lab_ENG_SOFT.
+- Via Powershell entrar na pasta PCS-LAB_ENG_SOFT.
 - Criar ambiente virtual: 
   - Atualizar versão do pip: `python -m pip install --upgrade pip`
   - Instalação do ambiente virtual: `python -m venv env`
