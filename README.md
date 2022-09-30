@@ -22,7 +22,7 @@
  - Com o ambiente virtual ativado, digitar: `python manage.py runserver`
 
  ## Configurando o linter e formatter
- 1. Rodar o comando `pip install ´r requirements.txt`
+ 1. Rodar o comando `pip install -r requirements.txt`
  2. Instalar pre-commit com o comando `pre-commit install`
  3. Ir nas configurações da extensão do Python para VSCode e, pesquisando *Formatting* selecionar o *black* como formatter padrão
  4. (OPCIONAL) Ir nas configurações gerais do VSCode e, pesquisando *Format on save* habilitar a checkbox
