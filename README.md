@@ -20,3 +20,9 @@
   - ! Uma vez que está no ambiente virtual, há uma indicação (env) antes do caminho atual no terminal. !
  ## *Rodando a aplicação:* 
  - Com o ambiente virtual ativado, digitar: `python manage.py runserver`
+
+ ## Configurando o linter
+ 1. Rodar o comando `pip install ´r requirements.txt`
+ 2. Ir nas configurações da extensão do Python para VSCode e, pesquisando *Formatting* selecionar o *black* como formatter padrão
+ 3. (OPCIONAL) Ir nas configurações gerais do VSCode e, pesquisando *Format on save* habilitar a checkbox
+ 4. Para formatar todos os arquivos, utilizar o comando `black .`
