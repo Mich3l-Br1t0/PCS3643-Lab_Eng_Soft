@@ -14,33 +14,34 @@ class FlightStatus(models.IntegerChoices):
     CANCELLED = 9, "Cancelado"
 
     class Meta:
-        db_table = 'status'
+        db_table = "status"
+
 
 class Pilot(models.Model):
-    pass
+    name = models.CharField(max_lenght=256)
+    anac_code = models.PositiveIntegerField(max_length=6)
+    cpf = models.PositiveIntegerField(max_length=11)
+
+    class Meta:
+        db_table = "pilots"
 
 
 class User(models.Model):
-    name = models.CharField()
-    document = models.PositiveIntegerField()
+    name = models.CharField(max_lenght=256)
+    cpf = models.PositiveIntegerField(max_lenght=11)
     email = models.EmailField()
+    password = models.CharField()
 
     class Meta:
-        db_table = 'Users'
+        db_table = "users"
 
 
 class Airport(models.Model):
-    pass
-
-class Flight(models.Model):
-    pilot = models.ForeignKey(Pilot, on_delete=SET_NULL, blank=True, null=True, related_name='pilots')
-    origin_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='origin_airports')
-    destination_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='destination_airports')
-    status = models.ForeignKey(FlightStatus, on_delete=SET_NULL, related_name='status')
-    estimated_departure = models.DateTimeField()
-    estimated_arrival = models.DateTimeField()
-    real_departure = models.DateTimeField(blank=True, null=True)
-    real_arrival = models.DateTimeField(blank=True, null=True)
+    icao = models.CharField(max_lenght=4)
+    name = models.CharField(max_lenght=256)
+    city = models.CharField(max_lenght=256)
+    state = models.CharField(max_lenght=256)
+    country = models.CharField(max_lenght=256)
 
     class Meta:
-        db_table = 'flights'
+        db_table = "airports"
