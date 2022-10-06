@@ -34,13 +34,13 @@ class Airport(models.Model):
 
 class Flight(models.Model):
     pilot = models.ForeignKey(Pilot, on_delete=SET_NULL, blank=True, null=True, related_name='pilots')
-    origin_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='airports')
-    destination_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='airports')
+    origin_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='origin_airports')
+    destination_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='destination_airports')
     status = models.ForeignKey(FlightStatus, on_delete=SET_NULL, related_name='status')
     estimated_departure = models.DateTimeField()
     estimated_arrival = models.DateTimeField()
-    real_departure = models.DateTimeField(null=True)
-    real_arrival = models.DateTimeField(null=True)
+    real_departure = models.DateTimeField(blank=True, null=True)
+    real_arrival = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'flights'
