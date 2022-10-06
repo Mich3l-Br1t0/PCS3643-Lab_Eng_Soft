@@ -30,3 +30,12 @@
  4. (OPCIONAL) Ir nas configurações gerais do VSCode e, pesquisando *Format on save* habilitar a checkbox
  5. Usar o atalho Ctrl+Shift+P para selecionar linter e escolher o flake8
  4. Para formatar todos os arquivos, utilizar o comando `black .`
+
+
+ ## Adicionando dados no BD 
+ - Com o repositório atualizado, rodar a aplicação e com o virtualenv ativado rodar o comando `python manage.py createsuperuser`.
+   - Digitar nome e senha do superuser (lembre-se de colocar uma senha que você lembre)
+- Entrar no painel de admin, adicionando `/admin` ao final da url e colocar o novo superuser cadastrado.
+- A partir daí será possível criar, deletar, atualizar Voos, Pilotos, Usuários e Aeroportos.
+
+ 
