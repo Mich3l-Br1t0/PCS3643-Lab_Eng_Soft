@@ -1,42 +1,43 @@
+from email.policy import default
 from django.db import models
 from django.db.models import SET_NULL, CASCADE
 
 
-class FlightStatus(models.IntegerChoices):
-    REGISTERED = 1, "Cadastrado"
-    BOARDING = 2, "Embarcando"
-    PROGRAMMED = 3, "Programado"
-    TAXIING = 4, "Taxiando"
-    READY = 5, "Pronto"
-    AUTHORIZED = 6, "Autorizado"
-    ON_AIR = 7, "Em voo"
-    LANDED = 8, "Aterrissado"
-    CANCELLED = 9, "Cancelado"
+class Pilot(models.Model):
+    name = models.CharField(max_length=256)
+    anac_code = models.CharField(max_length=6)
+    cpf = models.CharField(max_length=11)
 
     class Meta:
-        db_table = 'status'
-
-class Pilot(models.Model):
-    pass
+        db_table = "pilots"
 
 
 class User(models.Model):
-    name = models.CharField()
-    document = models.PositiveIntegerField()
+    name = models.CharField(max_length=256)
+    cpf = models.CharField(max_length=11)
     email = models.EmailField()
+    password = models.CharField(max_length=256)
 
     class Meta:
-        db_table = 'Users'
+        db_table = "users"
 
 
 class Airport(models.Model):
-    pass
+    icao = models.CharField(max_length=4)
+    name = models.CharField(max_length=256)
+    city = models.CharField(max_length=256)
+    state = models.CharField(max_length=256)
+    country = models.CharField(max_length=256)
+
+    class Meta:
+        db_table = "airports"
+
 
 class Flight(models.Model):
     pilot = models.ForeignKey(Pilot, on_delete=SET_NULL, blank=True, null=True, related_name='pilots')
     origin_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='origin_airports')
     destination_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='destination_airports')
-    status = models.ForeignKey(FlightStatus, on_delete=SET_NULL, related_name='status')
+    status = models.CharField(default='Cadastrado', max_length=256)
     estimated_departure = models.DateTimeField()
     estimated_arrival = models.DateTimeField()
     real_departure = models.DateTimeField(blank=True, null=True)
