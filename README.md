@@ -7,7 +7,7 @@
 
 ## **Passo 1: Instalar Python 3.10.X**
 - Onde instalar: https://www.python.org/downloads/
-- (Windows) Adicionar ao path. 
+- (Windows) Adicionar ao path.
 
 ## **Passo2: Configuração**
 - Clonar repositório na pasta desejada. 
@@ -18,5 +18,7 @@
 - Ativação do ambiente virtual: 
   - Executar o script: `.\env\scripts\Activate.ps1`
   - ! Uma vez que está no ambiente virtual, há uma indicação (env) antes do caminho atual no terminal. !
+- Instalando Django no ambiente:  `pip install django` 
+
  ## *Rodando a aplicação:* 
  - Com o ambiente virtual ativado, digitar: `python manage.py runserver`
