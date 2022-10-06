@@ -16,9 +16,42 @@ class AiportTestCase(TestCase):
             country="Brasil",
         )
 
-    def test_airport_id_creation(self):
+        Airport.objects.create(
+            icao="SBSS",
+            name="Aeroporto de É NOIS",
+            city="São Paulo",
+            state="RJ",
+            country="Zambabue",
+        )
+
+        Airport.objects.create(
+            icao="SBRS",
+            name="Aeroporto de Sulito",
+            city="Curitiba",
+            state="RS",
+            country="Sulito",
+        )
+
+    def test_airport_create(self):
         airport_one = Airport.objects.get(icao="SBSP")
         self.assertEqual(airport_one.id, 1)
+
+    def test_airport_update(self):
+        airport_two = Airport.objects.get(id=2)
+        airport_two.icao = "SBBB"
+
+        airport_two.save()
+
+        updated_airport_two = Airport.objects.get(id=2)
+
+        self.assertEqual(updated_airport_two.icao, "SBBB")
+
+    def test_airport_delete(self):
+        original_length = len(Airport.objects.all())
+        Airport.objects.first().delete()
+
+        final_length = len(Airport.objects.all())
+        self.assertEqual(final_length, original_length - 1)
 
 
 class PilotTestCase(TestCase):
@@ -27,9 +60,32 @@ class PilotTestCase(TestCase):
             name="Paulinho Renan", anac_code="ANAC22", cpf="12345678990"
         )
 
+        Pilot.objects.create(
+            name="Carlinhos Bala", anac_code="ANAC17", cpf="45319371023"
+        )
+
+        Pilot.objects.create(name="Josevaldo", anac_code="ANAC13", cpf="1653919371292")
+
     def test_pilot_id_creation(self):
         pilot_one = Pilot.objects.get(name__icontains="Paulinho")
         self.assertEqual(pilot_one.id, 1)
+
+    def test_pilot_update(self):
+        pilot_two = Pilot.objects.get(id=2)
+        pilot_two.anac_code = "ANAC12"
+
+        pilot_two.save()
+
+        updated_pilot_two = Pilot.objects.get(id=2)
+
+        self.assertEqual(updated_pilot_two.anac_code, "ANAC12")
+
+    def test_pilot_delete(self):
+        original_length = len(Pilot.objects.all())
+        Pilot.objects.first().delete()
+
+        final_length = len(Pilot.objects.all())
+        self.assertEqual(final_length, original_length - 1)
 
 
 class FlightTestCase(TestCase):
