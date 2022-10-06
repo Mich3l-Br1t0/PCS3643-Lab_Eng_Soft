@@ -32,3 +32,15 @@ class User(models.Model):
 
 class Airport(models.Model):
     pass
+
+
+class FlightStatus(models.IntegerChoices):
+    REGISTERED = 1, "Cadastrado"
+    BOARDING = 2, "Embarcando"
+    PROGRAMMED = 3, "Programado"
+    TAXIING = 4, "Taxiando"
+    READY = 5, "Pronto"
+    AUTHORIZED = 6, "Autorizado"
+    ON_AIR = 7, "Em voo"
+    LANDED = 8, "Aterrissado"
+    CANCELLED = 9, "Cancelado"
