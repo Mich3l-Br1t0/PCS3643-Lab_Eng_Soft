@@ -1,7 +1,5 @@
 from django.db import models
-
-
-# Create your models here.
+from django.db.models import SET_NULL, CASCADE
 
 
 class FlightStatus(models.IntegerChoices):
@@ -15,19 +13,8 @@ class FlightStatus(models.IntegerChoices):
     LANDED = 8, "Aterrissado"
     CANCELLED = 9, "Cancelado"
 
-
-class Flight(models.Model):
-    pass
-
-
-# TODO: confirmar necessidade de classes de relatorio
-class SpecificFlightReport(models.Model):
-    pass
-
-
-# TODO: confirmar necessidade de classes de relatorio
-class StatusReport(models.Model):
-    pass
+    class Meta:
+        db_table = "status"
 
 
 class Pilot(models.Model):
