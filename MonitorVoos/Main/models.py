@@ -31,11 +31,12 @@ class StatusReport(models.Model):
 
 
 class Pilot(models.Model):
-    pass
+    name = models.CharField(max_lenght=256)
+    anac_code = models.PositiveIntegerField(max_length=6)
+    cpf = models.PositiveIntegerField(max_length=11)
 
-
-class Plane(models.Model):
-    pass
+    class Meta:
+        db_table = "pilots"
 
 
 class User(models.Model):
@@ -43,6 +44,9 @@ class User(models.Model):
     cpf = models.PositiveIntegerField(max_lenght=11)
     email = models.EmailField()
     password = models.CharField()
+
+    class Meta:
+        db_table = "users"
 
 
 class Airport(models.Model):
