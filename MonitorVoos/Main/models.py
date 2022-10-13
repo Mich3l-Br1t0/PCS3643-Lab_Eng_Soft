@@ -33,15 +33,30 @@ class Airport(models.Model):
         db_table = "airports"
 
 
+class Airline(models.Model):
+    name = models.CharField(max_length=256)
+    flight_identifier = models.CharField(max_length=3)
+
+    class Meta:
+        db_table = "airlines"
+
+
 class Flight(models.Model):
-    pilot = models.ForeignKey(Pilot, on_delete=SET_NULL, blank=True, null=True, related_name='pilots')
-    origin_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='origin_airports')
-    destination_airport = models.ForeignKey(Airport, on_delete=CASCADE, related_name='destination_airports')
-    status = models.CharField(default='Cadastrado', max_length=256)
+    pilot = models.ForeignKey(
+        Pilot, on_delete=SET_NULL, blank=True, null=True, related_name="pilot"
+    )
+    origin_airport = models.ForeignKey(
+        Airport, on_delete=CASCADE, related_name="origin_airports"
+    )
+    destination_airport = models.ForeignKey(
+        Airport, on_delete=CASCADE, related_name="destination_airports"
+    )
+    airline = models.ForeignKey(Airline, on_delete=CASCADE, related_name="airline")
+    status = models.CharField(default="Cadastrado", max_length=256)
     estimated_departure = models.DateTimeField()
     estimated_arrival = models.DateTimeField()
     real_departure = models.DateTimeField(blank=True, null=True)
     real_arrival = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        db_table = 'flights'
+        db_table = "flights"
