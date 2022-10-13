@@ -38,4 +38,7 @@
 - Entrar no painel de admin, adicionando `/admin` ao final da url e colocar o novo superuser cadastrado.
 - A partir daí será possível criar, deletar, atualizar Voos, Pilotos, Usuários e Aeroportos.
 
+## Sobre a navegação 
+- Ainda não foram implementados os filtros de usuário, então a testagem ocorre com um super-usuário que consegue acessar todas as telas do sistema.
+
  
