@@ -5,11 +5,18 @@ from django.db.models import SET_NULL, CASCADE
 
 class Pilot(models.Model):
     name = models.CharField(max_length=256)
-    anac_code = models.CharField(max_length=6)
+    anac_code = models.CharField(
+        max_length=6,
+    )
     cpf = models.CharField(max_length=11)
 
     class Meta:
         db_table = "pilots"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["anac_code", "cpf"], name="unique anac code"
+            )
+        ]
 
 
 class User(models.Model):
@@ -20,6 +27,7 @@ class User(models.Model):
 
     class Meta:
         db_table = "users"
+        constraints = [models.UniqueConstraint(fields=["cpf"], name="unique document")]
 
 
 class Airport(models.Model):
@@ -31,6 +39,7 @@ class Airport(models.Model):
 
     class Meta:
         db_table = "airports"
+        constraints = [models.UniqueConstraint(fields=["icao"], name="unique icao")]
 
 
 class Airline(models.Model):
