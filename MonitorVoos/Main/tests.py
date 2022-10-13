@@ -119,16 +119,16 @@ class FlightTestCase(TestCase):
         flight_one = Flight.objects.get(origin_airport__name__contains="Congonhas")
         self.assertEqual(flight_one.id, 1)
 
+
 class UserTestCase(TestCase):
     def setUp(self):
-       user = User.objects.create(
-        name = "Josenildo das Cruzes",
-        cpf = "62771054864",
-        email = "josenildo@email.com",
-        password="josenildo10",
-       )
+        User.objects.create(
+            name="Josenildo das Cruzes",
+            cpf="62771054864",
+            email="josenildo@email.com",
+            password="josenildo10",
+        )
 
     def test_user_id_creation(self):
         user_one = User.objects.get(name__icontains="Josenildo")
         self.assertEqual(user_one.id, 1)
-    
