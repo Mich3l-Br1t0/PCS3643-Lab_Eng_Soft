@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
-from Main.models import Pilot, Flight, Airport, User
+from Main.models import Pilot, Flight, Airport, User, Airline
 from datetime import timedelta
 
 # Create your tests here.
@@ -105,6 +105,8 @@ class FlightTestCase(TestCase):
             country="Brasil",
         )
 
+        airline = Airline.objects.create(name="GOL Airlines", flight_identifier="GOL")
+
         estimated_departure = timezone.now()
         estimated_arrival = timezone.now() + timedelta(hours=3)
 
@@ -113,22 +115,50 @@ class FlightTestCase(TestCase):
             destination_airport=destination_airport,
             estimated_departure=estimated_departure,
             estimated_arrival=estimated_arrival,
+            airline=airline,
         )
 
     def test_flight_id_creation(self):
         flight_one = Flight.objects.get(origin_airport__name__contains="Congonhas")
         self.assertEqual(flight_one.id, 1)
 
+
 class UserTestCase(TestCase):
     def setUp(self):
-       user = User.objects.create(
-        name = "Josenildo das Cruzes",
-        cpf = "62771054864",
-        email = "josenildo@email.com",
-        password="josenildo10",
-       )
+        User.objects.create(
+            name="Josenildo das Cruzes",
+            cpf="62771054864",
+            email="josenildo@email.com",
+            password="josenildo10",
+        )
 
     def test_user_id_creation(self):
         user_one = User.objects.get(name__icontains="Josenildo")
         self.assertEqual(user_one.id, 1)
-    
+
+
+class AirlineTestCase(TestCase):
+    def setUp(self):
+        Airline.objects.create(name="LATAM Airlines", flight_identifier="LAT")
+        Airline.objects.create(name="Azul Airlines", flight_identifier="AZL")
+
+    def test_airline_id_creation(self):
+        airline_one = Airline.objects.get(name__icontains="LATAM")
+        self.assertEqual(airline_one.id, 1)
+
+    def test_airline_update(self):
+        airline_two = Airline.objects.get(id=2)
+        airline_two.flight_identifier = "AZU"
+
+        airline_two.save()
+
+        updated_airline_two = Airline.objects.get(id=2)
+
+        self.assertEqual(updated_airline_two.flight_identifier, "AZU")
+
+    def test_airline_delete(self):
+        original_length = len(Airline.objects.all())
+        Airline.objects.first().delete()
+
+        final_length = len(Airline.objects.all())
+        self.assertEqual(final_length, original_length - 1)
