@@ -1,3 +1,5 @@
 /.vscode
 /env
-__pycache__/
+/MonitorVoos/Main/migrations/__pycache__
+/MonitorVoos/MonitorVoos/__pycache__
+/MonitorVoos/Main/__pycache__
