@@ -1,6 +1,6 @@
 from django.urls import path
 
-from ..MyProj import views
+from ..MonitorVoos import views
 
 urlpatterns = [
     path("index", views.index, name="index"),
