@@ -1,9 +1,15 @@
 from django.urls import path
 
-from ..MonitorVoos import views
+from . import views
 
 urlpatterns = [
-    path("index", views.index, name="index"),
+    path("", views.index, name="index"),
     path("home", views.home, name="home"),
     path("signup", views.signup, name="signup"),
+    #path("", index),
+    #path("home/", home),
+    #path("signup/", signup),
+    #path("home/reports/", reports),
+    #path("home/monitoring/", monitoring),
+    #path("home/crud/", crud),
 ]
