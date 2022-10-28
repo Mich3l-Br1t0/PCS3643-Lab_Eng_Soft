@@ -1,0 +1,13 @@
+.container {
+    max-width: 960px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+#label {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
