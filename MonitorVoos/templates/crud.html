@@ -14,6 +14,8 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <title>Cadastro</title>
 
+    <script src="{% static 'js/crud.js' %}"></script>
+
     <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -67,6 +69,22 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
+
+        .main_container {
+            width: 40rem;
+            margin: 2rem;
+        }
+
+        .second_container {
+            width: 40rem;
+            margin: 2rem;
+            visibility: hidden;
+        }
+
+        .double_screen {
+            display: flex;
+            flex-direction: row;
+        }
     </style>
 
     <!-- Custom styles for this template -->
@@ -91,45 +109,58 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="../">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Cadastrar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Remover</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Editar</a>
-                        </li>
                     </ul>
-                    <form class="search" role=" search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                    </form>
                 </div>
             </div>
         </nav>
     </div>
     <div class="container">
-        <main>
+        <main class="double_screen">
             <div class="main_container">
-                <h4>Voos Cadastrados: </h4>
-                <ul>
-                    <li class="flight_item">Voo 1</li>
-                    <li class="flight_item">Voo 2</li>
-                    <li class="flight_item">Voo 3</li>
-                    <li class="flight_item">Voo 4</li>
-                    <li class="flight_item">Voo 5</li>
-                </ul>
+                <div class="online_flights">
+                    <h4>Voos Cadastrados: </h4>
+                    <ul>
+                        <li class="flight_item">Voo 1</li>
+                        <li class="flight_item">Voo 2</li>
+                        <li class="flight_item">Voo 3</li>
+                        <li class="flight_item">Voo 4</li>
+                        <li class="flight_item">Voo 5</li>
+                    </ul>
+                </div>
+                <div class="new_flight">
+                    <button class="add_flight" onclick="createNew()">Cadastrar Voo</button>
+                </div>
+            </div>
+            <div class="second_container" id="second">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Partida Estimada</label>
+                            <input type="text" class="form-control" id="inputEmail4">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Chegada Estimada</label>
+                            <input type="text" class="form-control" id="inputPassword4">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress">Piloto</label>
+                        <input type="text" class="form-control" id="inputAddress">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Aeroporto de Origem</label>
+                            <input type="text" class="form-control" id="inputEmail4">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Aeroporto de destino</label>
+                            <input type="text" class="form-control" id="inputPassword4">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="submit()">Cadastrar</button>
+                </form>
             </div>
         </main>
-
-        <footer class="my-5 pt-5 text-muted text-center text-small">
-            <p class="mb-1">&copy; 2017–2022 Company Name</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Privacy</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Support</a></li>
-            </ul>
-        </footer>
     </div>
 </body>
 
