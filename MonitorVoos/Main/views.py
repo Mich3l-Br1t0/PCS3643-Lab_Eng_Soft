@@ -4,15 +4,15 @@ from .forms import Registerform
 from django.views.decorators.csrf import csrf_exempt
 
 
-def register(request):
+def signup(request):
     if request.method == "POST":
         form = Registerform(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("")
+        return redirect("/")
     else:
         form = Registerform()
-    return render(request, "register.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def index(request):
@@ -21,10 +21,6 @@ def index(request):
 
 def home(request):
     return render(request, "home.html")
-
-
-def signup(request):
-    return render(request, "signup.html")
 
 
 def reports(request):
