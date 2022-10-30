@@ -86,7 +86,8 @@
             <div class="row g-5">
                 <div class="main">
                     <h4 class="mb-3">Dados Cadastrais</h4>
-                    <form class="needs-validation" novalidate>
+                    <form method="post" action="/signup/" class="needs-validation" novalidate>
+                        {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-sm-6" id="label">
                                 <label for="firstName" class="form-label">Nome</label>
@@ -147,7 +148,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <button>Confirmar</button>
+                                        <button type="submit">Confirmar</button>
                                     </div>
                                 </div>
                             </div>
