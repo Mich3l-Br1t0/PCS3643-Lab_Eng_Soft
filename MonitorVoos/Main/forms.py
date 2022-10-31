@@ -1,3 +1,4 @@
+from tkinter.ttk import LabelFrame
 from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -23,3 +24,13 @@ class NameForm(forms.Form):
     profession = forms.CharField(
         label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES)
     )
+
+
+class RegisterForm(UserCreationForm):
+    first_name = forms.CharField(max_length=100, label="Nome Completo")
+    last_name = forms.CharField(max_length=100, label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES))
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "username", "email", "password1", "password2"]

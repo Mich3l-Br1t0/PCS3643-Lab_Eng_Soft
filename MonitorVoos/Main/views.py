@@ -1,18 +1,21 @@
 from http.client import HTTPResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import NameForm
+from .forms import NameForm, RegisterForm
 from django.views.decorators.csrf import csrf_exempt
 
 
 def signup(request):
     if request.method == "POST":
-        form = NameForm(request.POST)
-        print(request.POST)
-        return redirect("/")
+        # form = NameForm(request.POST)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
     else:
-        form = NameForm()
-    return render(request, "signup.html", {"form": form})
+        # form = NameForm()
+        form = RegisterForm()
+    return render(request, "signup2.html", {"form": form})
 
 
 def index(request):
