@@ -86,73 +86,16 @@
             <div class="row g-5">
                 <div class="main">
                     <h4 class="mb-3">Dados Cadastrais</h4>
-                    <form method="post" action="/signup/" class="needs-validation" novalidate>
+                    {% load widget_tweaks %}
+                    <form action="#" method="post" class="needs-validation">
                         {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-sm-6" id="label">
-                                <label for="firstName" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                                <div class="invalid-feedback">
-                                    Insira um nome válido.
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6" id="label">
-                                <label for="lastName" class="form-label">Sobrenome</label>
-                                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-                                <div class="invalid-feedback">
-                                    Insira um sobrenome válido.
-                                </div>
-                            </div>
-
-
-                            <div class="col-12" id="label">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="you@example.com">
-                                <div class="invalid-feedback">
-                                    Insira um email válido.
-                                </div>
-                            </div>
-
-                            <div class="col-12" id="label">
-                                <label for="address" class="form-label">Senha</label>
-                                <input type="text" class="form-control" id="address" placeholder="Senha" required>
-                                <div class="invalid-feedback">
-
-                                </div>
-                            </div>
-
-                            <div class="col-12" id="label">
-                                <label for="address2" class="form-label">Confirmar senha</label>
-                                <input type="text" class="form-control" id="address2" placeholder="Confirmar senha"
-                                    required>
-                                <div class="invalid-feedback">
-                                    As senhas devem ser iguais.
-                                </div>
-                            </div>
-
-                            <div class="col-12" id="label">
-                                <div class="foot_container">
-                                    <div class="col-sm-6">
-                                        <label for="country" class="form-label">Profissão</label>
-                                        <select class="form-select" id="country" required>
-                                            <option value="">Profissão</option>
-                                            <option>Gerente de Operações</option>
-                                            <option>Torre de Controle</option>
-                                            <option>Piloto</option>
-                                            <option>Funcionário de Companhia Aérea</option>
-                                            <option>Operador de Voo</option>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Selecione uma profissão válida.
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <button type="submit">Confirmar</button>
-                                    </div>
-                                </div>
-                            </div>
+                        {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag}}
+                            {% render_field field class="form-control" %}
                         </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
                     </form>
                 </div>
             </div>
