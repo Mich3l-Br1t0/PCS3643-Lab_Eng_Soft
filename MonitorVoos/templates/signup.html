@@ -74,6 +74,8 @@
     <link href="{% static 'css\form-validation.css' %}" rel="stylesheet">
 </head>
 
+{% load crispy_forms_tags %}
+
 <body class="bg-light">
 
     <div class="container">
@@ -82,22 +84,12 @@
                 <h2>Criar nova conta</h2>
                 <a href="../../">Voltar</a>
             </div>
-
-            <div class="row g-5">
-                <div class="main">
-                    <h4 class="mb-3">Dados Cadastrais</h4>
-                    {% load widget_tweaks %}
-                    <form action="#" method="post" class="needs-validation">
-                        {% csrf_token %}
-                        {% for field in form.visible_fields %}
-                        <div class="form-group">
-                            {{ field.label_tag}}
-                            {% render_field field class="form-control" %}
-                        </div>
-                        {% endfor %}
-                        <button type="submit" class="btn btn-primary">Confirmar</button>
-                    </form>
-                </div>
+            <div>
+                <form method="POST" class="form-group">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </form>
             </div>
         </main>
 

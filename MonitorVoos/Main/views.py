@@ -15,7 +15,7 @@ def signup(request):
     else:
         # form = NameForm()
         form = RegisterForm()
-    return render(request, "signup2.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def index(request):
