@@ -18,7 +18,7 @@ def signup(request):
             return redirect("/")
     else:
         form = RegisterForm()
-    return render(request, "signup2.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def index(request):
