@@ -131,32 +131,17 @@
                     <button class="add_flight" onclick="createNew()">Cadastrar Voo</button>
                 </div>
             </div>
+
+            {% load widget_tweaks %}
             <div class="second_container" id="second">
-                <form>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Partida Estimada</label>
-                            <input type="text" class="form-control" id="inputEmail4">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="inputPassword4">Chegada Estimada</label>
-                            <input type="text" class="form-control" id="inputPassword4">
-                        </div>
-                    </div>
+                <form method="post" action="/">
+                    {% csrf_token %}
+                    {% for field in form %}
                     <div class="form-group">
-                        <label for="inputAddress">Piloto</label>
-                        <input type="text" class="form-control" id="inputAddress">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% render_field field class="form-control" %}
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Aeroporto de Origem</label>
-                            <input type="text" class="form-control" id="inputEmail4">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="inputPassword4">Aeroporto de destino</label>
-                            <input type="text" class="form-control" id="inputPassword4">
-                        </div>
-                    </div>
+                    {% endfor %}
                     <button type="submit" class="btn btn-primary" onclick="submit()">Cadastrar</button>
                 </form>
             </div>
