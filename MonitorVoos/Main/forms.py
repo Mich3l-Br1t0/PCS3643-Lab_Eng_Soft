@@ -27,10 +27,14 @@ class NameForm(forms.Form):
 
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(max_length=100, label="Nome Completo")
-    last_name = forms.CharField(max_length=100, label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES))
+    first_name = forms.CharField(max_length=100, label="Nome")
+    last_name = forms.CharField(max_length=100, label="Sobrenome")
+    cpf = forms.CharField(max_length=11, label="CPF")
     email = forms.EmailField()
+    profession = forms.CharField(
+        label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES)
+    )
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "username", "email", "password1", "password2"]
+        fields = ["first_name", "last_name", "username", "cpf", "email", "profession", "password1", "password2"]
