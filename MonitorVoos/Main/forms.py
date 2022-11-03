@@ -5,11 +5,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 PROFESSION_CHOICES = [
-    ("manager", "Gerente de Operações"),
-    ("control", "Torre de Controle"),
-    ("pilot", "Piloto"),
-    ("worker", "Funcionário da Companhia Aérea"),
-    ("operator", "Operador de voo"),
+    ("Manager", "Gerente de Operações"),
+    ("Control", "Torre de Controle"),
+    ("Pilot", "Piloto"),
+    ("Worker", "Funcionário da Companhia Aérea"),
+    ("Operator", "Operador de voo"),
 ]
 
 
@@ -21,6 +21,7 @@ class RegisterForm(UserCreationForm):
     profession = forms.CharField(
         label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES)
     )
+    anac_code = forms.CharField(max_length=6, label="Código Anac (caso seja piloto)", required=False)
 
     class Meta:
         model = User
@@ -31,6 +32,7 @@ class RegisterForm(UserCreationForm):
             "cpf",
             "email",
             "profession",
+            "anac_code",
             "password1",
             "password2",
         ]
