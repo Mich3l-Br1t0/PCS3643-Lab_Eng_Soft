@@ -1,24 +1,33 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from .forms import Registerform
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate
+from .forms import RegisterForm
+from Main.models import User_data
 
 
 def signup(request):
     if request.method == "POST":
-        form = Registerform(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
+            User_data.objects.create(
+                user_id=form.instance.id,
+                cpf=form.data['cpf'],
+                profession=form.data['profession']
+            )
+            return redirect("/")
     else:
-        form = Registerform()
+        form = RegisterForm()
     return render(request, "signup.html", {"form": form})
 
 
 def index(request):
-    return render(request, "index.html")
+    if request.user.is_authenticated:
+        return redirect("/home")
+    return redirect("/login")
 
 
+@login_required
 def home(request):
     return render(request, "home.html")
 

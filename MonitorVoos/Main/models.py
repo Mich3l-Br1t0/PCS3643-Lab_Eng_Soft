@@ -1,5 +1,6 @@
 from email.policy import default
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Pilot(models.Model):
@@ -18,14 +19,13 @@ class Pilot(models.Model):
         ]
 
 
-class User(models.Model):
-    name = models.CharField(max_length=256)
+class User_data(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     cpf = models.CharField(max_length=11)
-    email = models.EmailField()
-    password = models.CharField(max_length=256)
+    profession = models.CharField(max_length=100)
 
     class Meta:
-        db_table = "users"
+        db_table = "users_data"
         constraints = [models.UniqueConstraint(fields=["cpf"], name="unique document")]
 
 

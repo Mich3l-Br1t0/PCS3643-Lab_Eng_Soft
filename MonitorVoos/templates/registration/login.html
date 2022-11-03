@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+    <title>Login</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css\signin.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% load crispy_forms_tags %}
+    <main class="form-signin w-100 m-auto">
+        <form method="post" class="form-group">
+            {% csrf_token %}
+            {{form|crispy}}
+            <p><a href="/signup/">Criar conta</a></p>
+            <button type="submit" class="btn btn-success">Login</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+        </form>
+    </main>
+
+</body>
+
+</html>
