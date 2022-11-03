@@ -134,7 +134,7 @@
 
             {% load widget_tweaks %}
             <div class="second_container" id="second">
-                <form method="post" action="/">
+                <form method="post">
                     {% csrf_token %}
                     {% for field in form %}
                     <div class="form-group">
@@ -142,7 +142,7 @@
                         {% render_field field class="form-control" %}
                     </div>
                     {% endfor %}
-                    <button type="submit" class="btn btn-primary" onclick="submit()">Cadastrar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </form>
             </div>
         </main>

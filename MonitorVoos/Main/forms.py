@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Flight
 
 PROFESSION_CHOICES = [
     ("manager", "Gerente de Operações"),
@@ -37,8 +38,22 @@ class RegisterForm(UserCreationForm):
 
 
 class Newflightform(forms.Form):
-    estimated_departure = forms.CharField(max_length=100, label="Partida Estimada")
+    estimated_departure = forms.DateField(label="Partida Estimada")
     estimated_arrival = forms.CharField(max_length=100, label="Chegada Estimada")
-    pilot = forms.CharField(max_length=100, label="Piloto")
-    departure_airport = forms.CharField(max_length=100, label="Aeroporto de partida")
-    arrival_airport = forms.CharField(max_length=100, label="Aeroporto de chegada")
+    pilot = forms.IntegerField(label="Piloto")
+    departure_airport = forms.IntegerField(label="Aeroporto de partida")
+    arrival_airport = forms.IntegerField(label="Aeroporto de chegada")
+    airline = forms.IntegerField(label="Companhia aérea")
+    status = forms.CharField(label="Status")
+
+    class Meta:
+        model = Flight
+        fields = [
+            "estimated_departure",
+            "estimated_arrival",
+            "pilot",
+            "departure_airport",
+            "arrival_airport",
+            "airline",
+            "status",
+        ]
