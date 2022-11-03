@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm
+from .forms import RegisterForm, Newflightform
 from Main.models import User_data
 
 
@@ -12,8 +12,8 @@ def signup(request):
             form.save()
             User_data.objects.create(
                 user_id=form.instance.id,
-                cpf=form.data['cpf'],
-                profession=form.data['profession']
+                cpf=form.data["cpf"],
+                profession=form.data["profession"],
             )
             return redirect("/")
     else:
@@ -41,4 +41,12 @@ def monitoring(request):
 
 
 def crud(request):
-    return render(request, "crud.html")
+    if request.method == "POST":
+        form = Newflightform(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("/")
+    else:
+        form = Newflightform()
+    return render(request, "crud.html", {"form": form})
