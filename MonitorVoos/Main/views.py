@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm, Newflightform
-from Main.models import User_data
+from .forms import RegisterForm, Newflightform, AirportForm
+from .models import User_data, Airport
 
 
 def signup(request):
@@ -50,3 +50,13 @@ def crud(request):
     else:
         form = Newflightform()
     return render(request, "crud.html", {"form": form})
+
+
+def airport_crud(request):
+    if request.method == "POST":
+        form = AirportForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = AirportForm()
+    return render(request, "airport_crud.html", {"form": form})

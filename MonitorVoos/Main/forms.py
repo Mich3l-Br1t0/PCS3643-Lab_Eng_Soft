@@ -1,5 +1,6 @@
 from tkinter.ttk import LabelFrame
 from django import forms
+from .models import Airport
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -42,3 +43,16 @@ class Newflightform(forms.Form):
     pilot = forms.CharField(max_length=100, label="Piloto")
     departure_airport = forms.CharField(max_length=100, label="Aeroporto de partida")
     arrival_airport = forms.CharField(max_length=100, label="Aeroporto de chegada")
+
+
+class AirportForm(forms.ModelForm):
+    class Meta:
+        model = Airport
+        fields = "__all__"
+        labels = {
+            "icao": "Código ICAO",
+            "name": "Nome",
+            "city": "Cidade",
+            "state": "Estado",
+            "country": "País",
+        }
