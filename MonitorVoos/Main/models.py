@@ -59,7 +59,9 @@ class Flight(models.Model):
     destination_airport = models.ForeignKey(
         Airport, on_delete=models.CASCADE, related_name="destination_airports"
     )
-    airline = models.ForeignKey(Airline, on_delete=models.CASCADE, related_name="airline")
+    airline = models.ForeignKey(
+        Airline, on_delete=models.CASCADE, related_name="airline"
+    )
     status = models.CharField(default="Cadastrado", max_length=256)
     estimated_departure = models.DateTimeField()
     estimated_arrival = models.DateTimeField()
