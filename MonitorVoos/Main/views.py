@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm
+from .forms import RegisterForm, Newflightform
 from Main.models import User_data
 
 
