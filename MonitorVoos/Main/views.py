@@ -40,7 +40,7 @@ def monitoring(request):
     return render(request, "monitoring.html")
 
 
-def crud(request):
+def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
         print(request.POST)
@@ -49,4 +49,4 @@ def crud(request):
         return redirect("/")
     else:
         form = Newflightform()
-    return render(request, "crud.html", {"form": form})
+    return render(request, "flights_crud.html", {"form": form})
