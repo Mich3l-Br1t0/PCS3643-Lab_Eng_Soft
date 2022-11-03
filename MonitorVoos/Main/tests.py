@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
-from Main.models import Pilot, Flight, Airport, User, Airline
+from Main.models import Pilot, Flight, Airport, User_data, Airline
+from django.contrib.auth.models import User
 from datetime import timedelta
 
 # Create your tests here.
@@ -125,16 +126,53 @@ class FlightTestCase(TestCase):
 
 class UserTestCase(TestCase):
     def setUp(self):
-        User.objects.create(
-            name="Josenildo das Cruzes",
-            cpf="62771054864",
+
+        user_josenildo = User.objects.create(
+            first_name="Josenildo",
+            last_name="das Cruzes",
+            username="josenildo123",
             email="josenildo@email.com",
-            password="josenildo10",
+        )
+
+        user_jerivaldo = User.objects.create(
+            first_name="Jerivaldo",
+            last_name="Amoedo",
+            username="jerivaldo123",
+            email="jerivaldo@email.com",
+        )
+
+        User_data.objects.create(
+            user=user_josenildo,
+            cpf="62771054864",
+            profession="manager",
+        )
+
+        User_data.objects.create(
+            user=user_jerivaldo,
+            cpf="12345678991",
+            profession="worker",
         )
 
     def test_user_id_creation(self):
-        user_one = User.objects.get(name__icontains="Josenildo")
+        user_one = User_data.objects.get(user__username__icontains="josenildo")
         self.assertEqual(user_one.id, 1)
+
+    def test_user_update(self):
+        user_one = User_data.objects.get(id=1)
+        user_one.profession = "control"
+
+        user_one.save()
+
+        updated_user_one = User_data.objects.get(id=1)
+
+        self.assertEqual(updated_user_one.profession, "control")
+
+    def test_user_delete(self):
+        original_length = len(User_data.objects.all())
+        User_data.objects.first().delete()
+
+        final_length = len(User_data.objects.all())
+        self.assertEqual(final_length, original_length - 1)
 
 
 class AirlineTestCase(TestCase):
