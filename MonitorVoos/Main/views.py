@@ -43,10 +43,15 @@ def monitoring(request):
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
-        print(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect("/")
+        Flight.objects.create(
+            pilot_id=form.data["pilot"],
+            origin_airport_id=form.data["departure_airport"],
+            destination_airport_id=form.data["arrival_airport"],
+            airline_id=form.data["airline"],
+            status=form.data["status"],
+            estimated_departure=form.data["estimated_departure"],
+            estimated_arrival=form.data["estimated_arrival"],
+        )
     else:
         form = Newflightform()
     return render(request, "flights_crud.html", {"form": form})
