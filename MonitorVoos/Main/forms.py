@@ -13,19 +13,6 @@ PROFESSION_CHOICES = [
 ]
 
 
-class NameForm(forms.Form):
-    your_name = forms.CharField(label="Nome", max_length=100)
-    your_nickname = forms.CharField(label="Sobrenome", max_length=100)
-    email = forms.EmailField()
-    password = forms.CharField(label="Senha", widget=forms.PasswordInput())
-    confirm_password = forms.CharField(
-        label="Confirmar Senha", widget=forms.PasswordInput()
-    )
-    profession = forms.CharField(
-        label="Profissão", widget=forms.Select(choices=PROFESSION_CHOICES)
-    )
-
-
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, label="Nome")
     last_name = forms.CharField(max_length=100, label="Sobrenome")
