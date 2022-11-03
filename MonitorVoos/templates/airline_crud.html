@@ -1,16 +1,20 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.104.2">
     <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}">
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <title>Home</title>
+    <title>Companhias Aéreas</title>
+
+    <script src="{% static 'js/crud.js' %}"></script>
 
     <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -65,17 +69,35 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
+
+        .main_container {
+            width: 40rem;
+            margin: 2rem;
+        }
+
+        .second_container {
+            width: 40rem;
+            margin: 2rem;
+            visibility: hidden;
+        }
+
+        .double_screen {
+            display: flex;
+            flex-direction: row;
+        }
     </style>
 
+    <!-- Custom styles for this template -->
     <link href="{% static 'css\crud.css' %}" rel="stylesheet">
     <link href="{% static 'css\navbar.css' %}" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
+
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">MonitorVoos</a>
+                <a class="navbar-brand" href="#">Companhias Aéreas</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -85,27 +107,45 @@
                 <div class="collapse navbar-collapse" id="navbarsExample04">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="reports">Relatorios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="monitoring">Monitorar Voos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="crud">CRUD</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="airline_crud">Companhias Aéreas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout'%}">Sair</a>
+                            <a class="nav-link active" aria-current="page" href="../">Home</a>
                         </li>
                     </ul>
-                    <form class="search" role=" search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                    </form>
                 </div>
             </div>
         </nav>
+    </div>
+    <div class="container">
+        <main class="double_screen">
+            <div class="main_container">
+                <div class="online_flights">
+                    <h4>Companhias Cadastrados: </h4>
+                    <ul>
+                        <li class="flight_item">Companhia 1</li>
+                        <li class="flight_item">Companhia 2</li>
+                        <li class="flight_item">Companhia 3</li>
+                        <li class="flight_item">Companhia 4</li>
+                        <li class="flight_item">Companhia 5</li>
+                    </ul>
+                </div>
+                <div class="new_flight">
+                    <button class="btn btn-primary" onclick="createNew()">Cadastrar Companhia Aérea</button>
+                </div>
+            </div>
+
+            {% load widget_tweaks %}
+            <div class="second_container" id="second">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% render_field field class="form-control" %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </form>
+            </div>
+        </main>
     </div>
 </body>
 

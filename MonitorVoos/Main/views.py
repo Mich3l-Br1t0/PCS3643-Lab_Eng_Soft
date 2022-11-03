@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm, Newflightform
-from Main.models import User_data
+from .forms import RegisterForm, Newflightform, Newairlineform
+from Main.models import User_data, Airline
 
 
 def signup(request):
@@ -38,6 +38,18 @@ def reports(request):
 
 def monitoring(request):
     return render(request, "monitoring.html")
+
+
+def airline_crud(request):
+    if request.method == "POST":
+        form = Newairlineform(request.POST)
+        Airline.objects.create(
+            name=form.data["name"],
+            flight_identifier=form.data["flight_identifier"],
+        )
+    else:
+        form = Newairlineform()
+    return render(request, "airline_crud.html", {"form": form})
 
 
 def crud(request):
