@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import RegisterForm, Newflightform
-from Main.models import User_data
+from .models import User_data, Pilot
 
 
 def signup(request):
@@ -15,6 +15,13 @@ def signup(request):
                 cpf=form.data["cpf"],
                 profession=form.data["profession"],
             )
+            if form.data["profession"] == "Pilot":
+                Pilot.objects.create(
+                    name=form.data["first_name"]
+                    + ' ' + form.data["last_name"],
+                    anac_code=form.data["anac_code"],
+                    cpf=form.data["cpf"]
+                )
             return redirect("/")
     else:
         form = RegisterForm()
