@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm, Newflightform
+from .forms import RegisterForm, Newflightform, Newairlineform
 from Main.models import User_data, Flight, Pilot, Airline
-
 
 
 def signup(request):
@@ -48,7 +47,7 @@ def monitoring(request):
 
 
 def flights_crud(request):
-   if request.method == "POST":
+    if request.method == "POST":
         form = Newflightform(request.POST)
         Flight.objects.create(
             pilot_id=form.data["pilot"],
@@ -62,8 +61,8 @@ def flights_crud(request):
     else:
         form = Newflightform()
     return render(request, "flights_crud.html", {"form": form})
-    
-    
+
+
 def airline_crud(request):
     if request.method == "POST":
         form = Newairlineform(request.POST)
@@ -74,4 +73,3 @@ def airline_crud(request):
     else:
         form = Newairlineform()
     return render(request, "airline_crud.html", {"form": form})
-   
