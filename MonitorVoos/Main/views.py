@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import RegisterForm, Newflightform
-from .models import User_data, Pilot
+from Main.models import User_data, Pilot, Airline
 
 
 def signup(request):
@@ -17,10 +17,9 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + ' ' + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
-                    cpf=form.data["cpf"]
+                    cpf=form.data["cpf"],
                 )
             return redirect("/")
     else:
@@ -45,6 +44,18 @@ def reports(request):
 
 def monitoring(request):
     return render(request, "monitoring.html")
+
+
+def airline_crud(request):
+    if request.method == "POST":
+        form = Newairlineform(request.POST)
+        Airline.objects.create(
+            name=form.data["name"],
+            flight_identifier=form.data["flight_identifier"],
+        )
+    else:
+        form = Newairlineform()
+    return render(request, "airline_crud.html", {"form": form})
 
 
 def crud(request):

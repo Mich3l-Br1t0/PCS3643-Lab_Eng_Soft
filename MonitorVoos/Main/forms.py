@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Airline
 
 PROFESSION_CHOICES = [
     ("Manager", "Gerente de Operações"),
@@ -44,3 +45,17 @@ class Newflightform(forms.Form):
     pilot = forms.CharField(max_length=100, label="Piloto")
     departure_airport = forms.CharField(max_length=100, label="Aeroporto de partida")
     arrival_airport = forms.CharField(max_length=100, label="Aeroporto de chegada")
+
+
+class Newairlineform(forms.Form):
+    name = forms.CharField(max_length=100, label="Nome da Companhia aérea")
+    flight_identifier = forms.CharField(
+        max_length=3, label="Identificador da Companhia aérea"
+    )
+
+    class Meta:
+        model = Airline
+        fields = [
+            "name",
+            "flight_identifier",
+        ]
