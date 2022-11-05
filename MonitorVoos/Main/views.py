@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import RegisterForm, Newflightform
-from Main.models import User_data, Pilot, Airline
+from Main.models import User_data, Flight, Pilot, Airline
+
 
 
 def signup(request):
@@ -46,6 +47,23 @@ def monitoring(request):
     return render(request, "monitoring.html")
 
 
+def flights_crud(request):
+   if request.method == "POST":
+        form = Newflightform(request.POST)
+        Flight.objects.create(
+            pilot_id=form.data["pilot"],
+            origin_airport_id=form.data["departure_airport"],
+            destination_airport_id=form.data["arrival_airport"],
+            airline_id=form.data["airline"],
+            status=form.data["status"],
+            estimated_departure=form.data["estimated_departure"],
+            estimated_arrival=form.data["estimated_arrival"],
+        )
+    else:
+        form = Newflightform()
+    return render(request, "flights_crud.html", {"form": form})
+    
+    
 def airline_crud(request):
     if request.method == "POST":
         form = Newairlineform(request.POST)
@@ -56,15 +74,4 @@ def airline_crud(request):
     else:
         form = Newairlineform()
     return render(request, "airline_crud.html", {"form": form})
-
-
-def crud(request):
-    if request.method == "POST":
-        form = Newflightform(request.POST)
-        print(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect("/")
-    else:
-        form = Newflightform()
-    return render(request, "crud.html", {"form": form})
+   
