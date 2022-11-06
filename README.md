@@ -22,6 +22,7 @@
 
  ## *Rodando a aplicação:* 
  - Com o ambiente virtual ativado, digitar: `python manage.py runserver`
+   - ! Antes de rodar a aplicação, verificar se não há a necessidade de aplicar migrations com o comando `python manage.py migrate` !
 
  ## Configurando o linter e formatter
  1. Rodar o comando `pip install -r requirements.txt`
