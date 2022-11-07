@@ -58,6 +58,7 @@ def flights_crud(request):
 
     if not (user_profession in ["manager", "superuser"]):
         return redirect("/")
+
     if request.method == "POST":
         form = Newflightform(request.POST)
         if form.is_valid():
@@ -71,14 +72,14 @@ def flights_crud(request):
 
 @login_required
 def flights_update(request, flight_id):
-    allFlights = Flight.objects.get(pk=flight_id)
+    flight = Flight.objects.get(pk=flight_id)
+    form = Newflightform(request.POST or None, instance=flight)
     if request.method == "POST":
-        form = Newflightform(request.POST or None, instance=allFlights)
         if request.method == "POST":
             if form.is_valid():
                 form.save()
             return redirect("/home/flights_crud")
-    return render(request, "flights/flights_crud.html", {"form": form})
+    return render(request, "flights/flights_update.html", {"form": form})
 
 
 def flights_delete(request, flight_id):

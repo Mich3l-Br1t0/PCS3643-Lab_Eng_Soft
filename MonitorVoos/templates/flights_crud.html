@@ -138,9 +138,17 @@
                         {% for flights in form.data %}
                         <tr>
                             <td>
-                                <p><a href="{% url 'flights_update' flights.id %}">
-                                        {{flights.name}} - {{flights.flight_identifier}}
-                                    </a></p>
+                                <p>
+                                    <a href="{% url 'flights_update' flights.id %}">
+                                        {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
+                                    </a>
+                                </p>
+                                <p>
+                                    Partida estimada: {{flights.estimated_departure}}
+                                </p>
+                                <p>
+                                    Status atual: {{flights.status}}
+                                </p>
                             </td>
                             <td align="right">
                                 <a href="{% url 'flights_delete' flights.id %}"
