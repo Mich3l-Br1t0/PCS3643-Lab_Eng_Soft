@@ -49,18 +49,29 @@ def monitoring(request):
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
-        Flight.objects.create(
-            pilot_id=form.data["pilot"],
-            origin_airport_id=form.data["departure_airport"],
-            destination_airport_id=form.data["arrival_airport"],
-            airline_id=form.data["airline"],
-            status=form.data["status"],
-            estimated_departure=form.data["estimated_departure"],
-            estimated_arrival=form.data["estimated_arrival"],
-        )
+        if form.is_valid():
+            form.save()
+        return redirect("/home/flights_crud")
     else:
         form = Newflightform()
+        form.data = Flight.objects.all()
     return render(request, "flights_crud.html", {"form": form})
+
+
+def flights_update(request, flight_id):
+    allFlights = Flight.objects.get(pk=flight_id)
+    if request.method == "POST":
+        form = Newflightform(request.POST or None, instance=allFlights)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/flights_crud")
+    return render(request, "flights/flights_crud.html", {"form": form})
+
+
+def flights_delete(request, flight_id):
+    Flight.objects.get(pk=flight_id).delete()
+    return redirect("/home/flights_crud")
 
 
 def airline_crud(request):

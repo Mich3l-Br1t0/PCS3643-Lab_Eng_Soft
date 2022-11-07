@@ -1,5 +1,6 @@
 from tkinter.ttk import LabelFrame
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -41,7 +42,7 @@ class RegisterForm(UserCreationForm):
         ]
 
 
-class Newflightform(forms.Form):
+class Newflightform(ModelForm):
     estimated_departure = forms.DateField(label="Partida Estimada")
     estimated_arrival = forms.CharField(max_length=100, label="Chegada Estimada")
     pilot = forms.IntegerField(label="Piloto")
@@ -52,7 +53,7 @@ class Newflightform(forms.Form):
 
     class Meta:
         model = Flight
-        fields = [
+        fields = (
             "estimated_departure",
             "estimated_arrival",
             "pilot",
@@ -60,7 +61,7 @@ class Newflightform(forms.Form):
             "arrival_airport",
             "airline",
             "status",
-        ]
+        )
 
 
 class Newairlineform(forms.Form):
