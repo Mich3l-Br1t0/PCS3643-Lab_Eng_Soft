@@ -85,12 +85,29 @@ def airline_crud(request):
 
     if not (user_profession in ['manager', 'superuser']):
         return redirect("/")
+
     if request.method == "POST":
         form = Newairlineform(request.POST)
-        Airline.objects.create(
-            name=form.data["name"],
-            flight_identifier=form.data["flight_identifier"],
-        )
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airline_crud")
     else:
         form = Newairlineform()
+        form.data = Airline.objects.all()
     return render(request, "airline_crud.html", {"form": form})
+
+
+@login_required
+def airline_update(request, airline_id):
+    airline = Airline.objects.get(pk=airline_id)
+    form = Newairlineform(request.POST or None, instance=airline)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airline_crud")
+    return render(request, "airlines/airline_update.html", {"form": form})
+
+
+def airline_delete(request, airline_id):
+    Airline.objects.get(pk=airline_id).delete()
+    return redirect("/home/airline_crud")

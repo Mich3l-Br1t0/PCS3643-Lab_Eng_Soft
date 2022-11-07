@@ -115,45 +115,12 @@
         </nav>
     </div>
     <div class="container">
-        <main class="double_screen">
-            <div class="main_container">
-                <div class="online_flights">
-                    <h4>Companhias Cadastrados: </h4>
-                    <table class="table table-striped table-hover table-bordered">
-                        {% for airline in form.data %}
-                            <tr>
-                                <td> 
-                                    <p><a href="{% url 'airline_update' airline.id %}">
-                                        {{airline.name}} - {{airline.flight_identifier}}
-                                    </a></p>
-                                </td>
-                                <td align="right">
-                                    <a href="{% url 'airline_delete' airline.id %}" 
-                                    class="btn btn-outline-danger btn-sm">Deletar</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <div class="new_flight">
-                    <button class="btn btn-primary" onclick="createNew()">Cadastrar Companhia Aérea</button>
-                </div>
-            </div>
-
-            {% load widget_tweaks %}
-            <div class="second_container" id="second">
-                <form method="post">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% render_field field class="form-control" %}
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
-                </form>
-            </div>
-        </main>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <br/>
+            <input type="submit" value="Update" class="btn btn-secondary">
+        </form>
     </div>
 </body>
 

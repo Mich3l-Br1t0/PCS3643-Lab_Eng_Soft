@@ -2,6 +2,7 @@ from tkinter.ttk import LabelFrame
 from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from .models import Airline, Flight
 
@@ -43,7 +44,8 @@ class RegisterForm(UserCreationForm):
 
 class Newflightform(forms.Form):
     estimated_departure = forms.DateField(label="Partida Estimada")
-    estimated_arrival = forms.CharField(max_length=100, label="Chegada Estimada")
+    estimated_arrival = forms.CharField(
+        max_length=100, label="Chegada Estimada")
     pilot = forms.IntegerField(label="Piloto")
     departure_airport = forms.IntegerField(label="Aeroporto de partida")
     arrival_airport = forms.IntegerField(label="Aeroporto de chegada")
@@ -63,7 +65,7 @@ class Newflightform(forms.Form):
         ]
 
 
-class Newairlineform(forms.Form):
+class Newairlineform(ModelForm):
     name = forms.CharField(max_length=100, label="Nome da Companhia aérea")
     flight_identifier = forms.CharField(
         max_length=3, label="Identificador da Companhia aérea"
@@ -71,21 +73,4 @@ class Newairlineform(forms.Form):
 
     class Meta:
         model = Airline
-        fields = [
-            "name",
-            "flight_identifier",
-        ]
-
-
-class Newairlineform(forms.Form):
-    name = forms.CharField(max_length=100, label="Nome da Companhia aérea")
-    flight_identifier = forms.CharField(
-        max_length=3, label="Identificador da Companhia aérea"
-    )
-
-    class Meta:
-        model = Airline
-        fields = [
-            "name",
-            "flight_identifier",
-        ]
+        fields = ("name", "flight_identifier")
