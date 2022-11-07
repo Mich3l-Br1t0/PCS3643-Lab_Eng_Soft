@@ -15,6 +15,13 @@ PROFESSION_CHOICES = [
     ("Operator", "Operador de voo"),
 ]
 
+STATUS_CHOICES = [
+    ("Cadastrado", "Cadastrado"),
+    ("Em_voo", "Em voo"),
+    ("Aguardando_Embarque", "Aguardado Embarque"),
+    ("Aguardando_Desembarque", "Aguardando Desembarque"),
+]
+
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, label="Nome")
@@ -44,9 +51,10 @@ class RegisterForm(UserCreationForm):
 
 
 class Newflightform(ModelForm):
-    estimated_departure = forms.DateField(label="Partida Estimada")
-    estimated_arrival = forms.DateField(label="Chegada Estimada")
-    status = forms.CharField(label="Status")
+
+    status = forms.CharField(
+        label="Status", widget=forms.Select(choices=STATUS_CHOICES)
+    )
 
     class Meta:
         model = Flight
@@ -59,6 +67,14 @@ class Newflightform(ModelForm):
             "airline",
             "status",
         ]
+        labels = {
+            "estimated_departure": "Partida Estimada",
+            "estimated_arrival": "Chegada Estimada",
+            "pilot": "Piloto",
+            "origin_airport": "Aeroporto de partida",
+            "destination_airport": "Aeroporto de chegada",
+            "airline": "Companhia Aérea",
+        }
 
 
 class Newairlineform(ModelForm):
