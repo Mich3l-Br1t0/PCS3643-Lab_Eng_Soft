@@ -46,23 +46,19 @@ class RegisterForm(UserCreationForm):
 class Newflightform(ModelForm):
     estimated_departure = forms.DateField(label="Partida Estimada")
     estimated_arrival = forms.DateField(label="Chegada Estimada")
-    pilot_id = forms.IntegerField(label="Piloto")
-    departure_airport = forms.IntegerField(label="Aeroporto de partida")
-    arrival_airport = forms.IntegerField(label="Aeroporto de chegada")
-    airline_id = forms.IntegerField(label="Companhia aérea")
     status = forms.CharField(label="Status")
 
     class Meta:
         model = Flight
-        fields = (
+        fields = [
             "estimated_departure",
             "estimated_arrival",
-            "pilot_id",
-            "departure_airport",
-            "arrival_airport",
-            "airline_id",
+            "pilot",
+            "origin_airport",
+            "destination_airport",
+            "airline",
             "status",
-        )
+        ]
 
 
 class Newairlineform(ModelForm):
