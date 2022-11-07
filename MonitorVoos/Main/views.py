@@ -17,7 +17,8 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"] + " " + form.data["last_name"],
+                    name=form.data["first_name"]
+                    + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -38,15 +39,26 @@ def home(request):
     return render(request, "home.html")
 
 
+@login_required
 def reports(request):
     return render(request, "reports.html")
 
 
+@login_required
 def monitoring(request):
     return render(request, "monitoring.html")
 
 
+@login_required
 def flights_crud(request):
+    if not (request.user.is_superuser):
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+    else:
+        user_profession = 'superuser'
+
+    if not (user_profession in ['manager', 'superuser']):
+        return redirect("/")
     if request.method == "POST":
         form = Newflightform(request.POST)
         Flight.objects.create(
@@ -63,13 +75,39 @@ def flights_crud(request):
     return render(request, "flights_crud.html", {"form": form})
 
 
+@login_required
 def airline_crud(request):
+    if not (request.user.is_superuser):
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+    else:
+        user_profession = 'superuser'
+
+    if not (user_profession in ['manager', 'superuser']):
+        return redirect("/")
+
     if request.method == "POST":
         form = Newairlineform(request.POST)
-        Airline.objects.create(
-            name=form.data["name"],
-            flight_identifier=form.data["flight_identifier"],
-        )
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airline_crud")
     else:
         form = Newairlineform()
+        form.data = Airline.objects.all()
     return render(request, "airline_crud.html", {"form": form})
+
+
+@login_required
+def airline_update(request, airline_id):
+    airline = Airline.objects.get(pk=airline_id)
+    form = Newairlineform(request.POST or None, instance=airline)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airline_crud")
+    return render(request, "airlines/airline_update.html", {"form": form})
+
+
+def airline_delete(request, airline_id):
+    Airline.objects.get(pk=airline_id).delete()
+    return redirect("/home/airline_crud")
