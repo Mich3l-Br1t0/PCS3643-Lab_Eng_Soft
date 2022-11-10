@@ -17,9 +17,9 @@ PROFESSION_CHOICES = [
 
 STATUS_CHOICES = [
     ("Cadastrado", "Cadastrado"),
-    ("Em_voo", "Em voo"),
-    ("Aguardando_Embarque", "Aguardado Embarque"),
-    ("Aguardando_Desembarque", "Aguardando Desembarque"),
+    ("Em voo", "Em voo"),
+    ("Aguardando Embarque", "Aguardado Embarque"),
+    ("Aguardando Desembarque", "Aguardando Desembarque"),
 ]
 
 
