@@ -18,8 +18,6 @@
 
     <script src="{% static 'js/crud.js' %}"></script>
 
-    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -136,17 +134,17 @@
                     <h4>Companhias Cadastrados: </h4>
                     <table class="table table-striped table-hover table-bordered">
                         {% for airline in form.data %}
-                            <tr>
-                                <td> 
-                                    <p><a href="{% url 'airline_update' airline.id %}">
+                        <tr>
+                            <td>
+                                <p><a href="{% url 'airline_update' airline.id %}">
                                         {{airline.name}} - {{airline.flight_identifier}}
                                     </a></p>
-                                </td>
-                                <td align="right">
-                                    <a href="{% url 'airline_delete' airline.id %}" 
+                            </td>
+                            <td align="right">
+                                <a href="{% url 'airline_delete' airline.id %}"
                                     class="btn btn-outline-danger btn-sm">Deletar</a>
-                                </td>
-                            </tr>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </table>
                 </div>
