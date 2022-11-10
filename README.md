@@ -23,6 +23,7 @@
  ## *Rodando a aplicação:* 
  - Com o ambiente virtual ativado, digitar: `python manage.py runserver`
    - ! Antes de rodar a aplicação, verificar se não há a necessidade de aplicar migrations com o comando `python manage.py migrate` !
+ - Para acessar a aplicação, rodar no prompt de comando `cd MonitorVoos`
 
  ## Configurando o linter e formatter
  1. Rodar o comando `pip install -r requirements.txt`
@@ -39,7 +40,5 @@
 - Entrar no painel de admin, adicionando `/admin` ao final da url e colocar o novo superuser cadastrado.
 - A partir daí será possível criar, deletar, atualizar Voos, Pilotos, Usuários e Aeroportos.
 
-## Sobre a navegação 
-- Ainda não foram implementados os filtros de usuário, então a testagem ocorre com um super-usuário que consegue acessar todas as telas do sistema.
 
  
