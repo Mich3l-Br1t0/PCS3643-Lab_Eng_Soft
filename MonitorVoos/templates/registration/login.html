@@ -20,12 +20,13 @@
 <body>
     {% load crispy_forms_tags %}
     <main class="form-signin w-100 m-auto">
+        <h3>Login</h3>
         <form method="post" class="form-group">
             {% csrf_token %}
             {{form|crispy}}
             <p><a href="/signup/">Criar conta</a></p>
-            <button type="submit" class="btn btn-success">Login</button>
-            <p class="mt-5 mb-3 text-muted">&copy;2022</p>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
         </form>
     </main>
 

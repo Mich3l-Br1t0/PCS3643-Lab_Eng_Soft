@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import RegisterForm, Newflightform, AirportForm
-from .models import User_data, Airport
+from .forms import RegisterForm, Newflightform, Newairlineform
+from .models import User_data, Flight, Pilot, Airline
 
 
 def signup(request):
@@ -15,6 +15,12 @@ def signup(request):
                 cpf=form.data["cpf"],
                 profession=form.data["profession"],
             )
+            if form.data["profession"] == "Pilot":
+                Pilot.objects.create(
+                    name=form.data["first_name"] + " " + form.data["last_name"],
+                    anac_code=form.data["anac_code"],
+                    cpf=form.data["cpf"],
+                )
             return redirect("/")
     else:
         form = RegisterForm()
@@ -32,31 +38,88 @@ def home(request):
     return render(request, "home.html")
 
 
+@login_required
 def reports(request):
     return render(request, "reports.html")
 
 
+@login_required
 def monitoring(request):
     return render(request, "monitoring.html")
 
 
-def crud(request):
+@login_required
+def flights_crud(request):
+    if not (request.user.is_superuser):
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+    else:
+        user_profession = "superuser"
+
+    if not (user_profession in ["manager", "superuser"]):
+        return redirect("/")
+
     if request.method == "POST":
         form = Newflightform(request.POST)
-        print(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
+        return redirect("/home/flights_crud")
     else:
         form = Newflightform()
-    return render(request, "crud.html", {"form": form})
+        form.data = Flight.objects.all()
+    return render(request, "flights_crud.html", {"form": form})
 
 
-def airport_crud(request):
+@login_required
+def flights_update(request, flight_id):
+    flight = Flight.objects.get(pk=flight_id)
+    form = Newflightform(request.POST or None, instance=flight)
     if request.method == "POST":
-        form = AirportForm(request.POST)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/flights_crud")
+    return render(request, "flights/flights_update.html", {"form": form})
+
+
+def flights_delete(request, flight_id):
+    Flight.objects.get(pk=flight_id).delete()
+    return redirect("/home/flights_crud")
+
+
+@login_required
+def airline_crud(request):
+    if not (request.user.is_superuser):
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+    else:
+        user_profession = "superuser"
+
+    if not (user_profession in ["manager", "superuser"]):
+        return redirect("/")
+
+    if request.method == "POST":
+        form = Newairlineform(request.POST)
         if form.is_valid():
             form.save()
+        return redirect("/home/airline_crud")
     else:
-        form = AirportForm()
-    return render(request, "airport_crud.html", {"form": form})
+        form = Newairlineform()
+        form.data = Airline.objects.all()
+    return render(request, "airline_crud.html", {"form": form})
+
+
+@login_required
+def airline_update(request, airline_id):
+    airline = Airline.objects.get(pk=airline_id)
+    form = Newairlineform(request.POST or None, instance=airline)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airline_crud")
+    return render(request, "airlines/airline_update.html", {"form": form})
+
+
+def airline_delete(request, airline_id):
+    Airline.objects.get(pk=airline_id).delete()
+    return redirect("/home/airline_crud")
