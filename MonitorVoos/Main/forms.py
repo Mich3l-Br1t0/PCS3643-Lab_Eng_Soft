@@ -1,5 +1,6 @@
 from tkinter.ttk import LabelFrame
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
@@ -12,6 +13,13 @@ PROFESSION_CHOICES = [
     ("Pilot", "Piloto"),
     ("Worker", "Funcionário da Companhia Aérea"),
     ("Operator", "Operador de voo"),
+]
+
+STATUS_CHOICES = [
+    ("Cadastrado", "Cadastrado"),
+    ("Em_voo", "Em voo"),
+    ("Aguardando_Embarque", "Aguardado Embarque"),
+    ("Aguardando_Desembarque", "Aguardando Desembarque"),
 ]
 
 
@@ -42,15 +50,11 @@ class RegisterForm(UserCreationForm):
         ]
 
 
-class Newflightform(forms.Form):
-    estimated_departure = forms.DateField(label="Partida Estimada")
-    estimated_arrival = forms.CharField(
-        max_length=100, label="Chegada Estimada")
-    pilot = forms.IntegerField(label="Piloto")
-    departure_airport = forms.IntegerField(label="Aeroporto de partida")
-    arrival_airport = forms.IntegerField(label="Aeroporto de chegada")
-    airline = forms.IntegerField(label="Companhia aérea")
-    status = forms.CharField(label="Status")
+class Newflightform(ModelForm):
+
+    status = forms.CharField(
+        label="Status", widget=forms.Select(choices=STATUS_CHOICES)
+    )
 
     class Meta:
         model = Flight
@@ -58,11 +62,19 @@ class Newflightform(forms.Form):
             "estimated_departure",
             "estimated_arrival",
             "pilot",
-            "departure_airport",
-            "arrival_airport",
+            "origin_airport",
+            "destination_airport",
             "airline",
             "status",
         ]
+        labels = {
+            "estimated_departure": "Partida Estimada",
+            "estimated_arrival": "Chegada Estimada",
+            "pilot": "Piloto",
+            "origin_airport": "Aeroporto de partida",
+            "destination_airport": "Aeroporto de chegada",
+            "airline": "Companhia Aérea",
+        }
 
 
 class Newairlineform(ModelForm):

@@ -129,54 +129,18 @@
             </div>
         </nav>
     </div>
+    {% load widget_tweaks %}
     <div class="container">
-        <main class="double_screen">
-            <div class="main_container">
-                <div class="online_flights">
-                    <h4>Voos Cadastrados: </h4>
-                    <table class="table table-striped table-hover table-bordered">
-                        {% for flights in form.data %}
-                        <tr>
-                            <td>
-                                <p>
-                                    <a href="{% url 'flights_update' flights.id %}">
-                                        {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
-                                    </a>
-                                </p>
-                                <p>
-                                    Partida estimada: {{flights.estimated_departure}}
-                                </p>
-                                <p>
-                                    Status atual: {{flights.status}}
-                                </p>
-                            </td>
-                            <td align="right">
-                                <a href="{% url 'flights_delete' flights.id %}"
-                                    class="btn btn-outline-danger btn-sm">Deletar</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <div class="new_flight">
-                    <button class="btn btn-primary" onclick="createNew()">Cadastrar Voo</button>
-                </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% render_field field class="form-control" %}
             </div>
-
-            {% load widget_tweaks %}
-            <div class="second_container" id="second">
-                <form method="post">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% render_field field class="form-control" %}
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
-                </form>
-            </div>
-        </main>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Atualizar</button>
+        </form>
     </div>
 </body>
 

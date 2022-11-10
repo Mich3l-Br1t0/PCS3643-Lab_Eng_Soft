@@ -18,6 +18,9 @@ class Pilot(models.Model):
             )
         ]
 
+    def __str__(self):
+        return self.name + " - " + self.anac_code
+
 
 class User_data(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -40,6 +43,9 @@ class Airport(models.Model):
         db_table = "airports"
         constraints = [models.UniqueConstraint(fields=["icao"], name="unique icao")]
 
+    def __str__(self):
+        return self.name
+
 
 class Airline(models.Model):
     name = models.CharField(max_length=256)
@@ -47,6 +53,9 @@ class Airline(models.Model):
 
     class Meta:
         db_table = "airlines"
+
+    def __str__(self):
+        return self.name
 
 
 class Flight(models.Model):

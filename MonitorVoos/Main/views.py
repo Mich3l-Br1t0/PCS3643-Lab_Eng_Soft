@@ -17,8 +17,7 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + " " + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -55,24 +54,37 @@ def flights_crud(request):
         user_id = request.user.pk
         user_profession = User_data.objects.get(user_id=user_id).profession
     else:
-        user_profession = 'superuser'
+        user_profession = "superuser"
 
-    if not (user_profession in ['manager', 'superuser']):
+    if not (user_profession in ["manager", "superuser"]):
         return redirect("/")
+
     if request.method == "POST":
         form = Newflightform(request.POST)
-        Flight.objects.create(
-            pilot_id=form.data["pilot"],
-            origin_airport_id=form.data["departure_airport"],
-            destination_airport_id=form.data["arrival_airport"],
-            airline_id=form.data["airline"],
-            status=form.data["status"],
-            estimated_departure=form.data["estimated_departure"],
-            estimated_arrival=form.data["estimated_arrival"],
-        )
+        if form.is_valid():
+            form.save()
+        return redirect("/home/flights_crud")
     else:
         form = Newflightform()
+        form.data = Flight.objects.all()
     return render(request, "flights_crud.html", {"form": form})
+
+
+@login_required
+def flights_update(request, flight_id):
+    flight = Flight.objects.get(pk=flight_id)
+    form = Newflightform(request.POST or None, instance=flight)
+    if request.method == "POST":
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/flights_crud")
+    return render(request, "flights/flights_update.html", {"form": form})
+
+
+def flights_delete(request, flight_id):
+    Flight.objects.get(pk=flight_id).delete()
+    return redirect("/home/flights_crud")
 
 
 @login_required
@@ -81,9 +93,9 @@ def airline_crud(request):
         user_id = request.user.pk
         user_profession = User_data.objects.get(user_id=user_id).profession
     else:
-        user_profession = 'superuser'
+        user_profession = "superuser"
 
-    if not (user_profession in ['manager', 'superuser']):
+    if not (user_profession in ["manager", "superuser"]):
         return redirect("/")
 
     if request.method == "POST":
