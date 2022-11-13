@@ -127,13 +127,18 @@
             </div>
         </nav>
     </div>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+    {% endif %}
     <div class="container">
         <main class="double_screen">
             <div class="main_container">
                 <div class="online_flights">
                     <h4>Voos Cadastrados: </h4>
                     <table class="table table-striped table-hover table-bordered">
-                        {% for flights in form.data %}
+                        {% for flights in form.flights %}
                         <tr>
                             <td>
                                 <p>

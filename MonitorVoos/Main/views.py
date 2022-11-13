@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate
+from django.contrib import messages
 from .forms import RegisterForm, Newflightform, Newairlineform
 from Main.models import User_data, Flight, Pilot, Airline
 
@@ -17,7 +17,8 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"] + " " + form.data["last_name"],
+                    name=form.data["first_name"]
+                    + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -63,10 +64,14 @@ def flights_crud(request):
         form = Newflightform(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/home/flights_crud")
+            messages.success(
+                request, 'student with name  {}  added.'.format(form.name))
+            return redirect("/home/flights_crud")
+        form.flights = Flight.objects.all()
+        return render(request, "flights_crud.html", {"form": form})
     else:
         form = Newflightform()
-        form.data = Flight.objects.all()
+        form.flights = Flight.objects.all()
     return render(request, "flights_crud.html", {"form": form})
 
 
