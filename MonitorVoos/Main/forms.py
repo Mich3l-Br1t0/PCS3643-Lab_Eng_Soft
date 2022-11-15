@@ -1,7 +1,7 @@
 from tkinter.ttk import LabelFrame
 from django import forms
 from django.forms import ModelForm
-from django.contrib.auth import login, authenticate
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Airline, Flight, Airport
@@ -16,9 +16,9 @@ PROFESSION_CHOICES = [
 
 STATUS_CHOICES = [
     ("Cadastrado", "Cadastrado"),
-    ("Em_voo", "Em voo"),
-    ("Aguardando_Embarque", "Aguardado Embarque"),
-    ("Aguardando_Desembarque", "Aguardando Desembarque"),
+    ("Em voo", "Em voo"),
+    ("Aguardando Embarque", "Aguardado Embarque"),
+    ("Aguardando Desembarque", "Aguardando Desembarque"),
 ]
 
 
@@ -67,13 +67,27 @@ class Newflightform(ModelForm):
             "status",
         ]
         labels = {
-            "estimated_departure": "Partida Estimada",
-            "estimated_arrival": "Chegada Estimada",
+            "estimated_departure": "Partida Estimada (AAAA-MM-DD hh:mm)",
+            "estimated_arrival": "Chegada Estimada (AAAA-MM-DD hh:mm)",
             "pilot": "Piloto",
             "origin_airport": "Aeroporto de partida",
             "destination_airport": "Aeroporto de chegada",
             "airline": "Companhia Aérea",
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        origin_airport = cleaned_data.get("origin_airport")
+        destination_airport = cleaned_data.get("destination_airport")
+        if origin_airport == destination_airport:
+            raise ValidationError(
+                "Aeroporto de destino não pode ser igual o de partida")
+        estimated_departure = cleaned_data.get("estimated_departure")
+        estimated_arrival = cleaned_data.get("estimated_arrival")
+        if estimated_departure > estimated_arrival:
+            raise ValidationError(
+                "Partida estimada não pode ser maior que chegada")
+        return cleaned_data
 
 
 class Newairlineform(ModelForm):
