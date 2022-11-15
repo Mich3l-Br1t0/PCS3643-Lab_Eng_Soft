@@ -53,10 +53,40 @@ def crud(request):
 
 
 def airport_crud(request):
+    if not (request.user.is_superuser):
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+    else:
+        user_profession = "superuser"
+
+    if not (user_profession in ["manager", "superuser"]):
+        return redirect("/")
+
     if request.method == "POST":
         form = AirportForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect("/home/airport_crud")
+        form.airports = Airport.objects.all()
+        return render(request, "airport_crud.html", {"form": form})
+
     else:
         form = AirportForm()
+        form.airports = Airport.objects.all()
     return render(request, "airport_crud.html", {"form": form})
+
+
+@login_required
+def airport_update(request, airport_id):
+    airport = Airport.objects.get(pk=airport_id)
+    form = AirportForm(request.POST or None, instance=airport)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+        return redirect("/home/airport_crud")
+    return render(request, "airports/airport_update.html", {"form": form})
+
+
+def airport_delete(request, airport_id):
+    Airport.objects.get(pk=airport_id).delete()
+    return redirect("/home/airport_crud")
