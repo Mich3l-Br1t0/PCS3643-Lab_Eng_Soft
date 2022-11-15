@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.urls import reverse
 from Main.models import Pilot, Flight, Airport, User_data, Airline
 from django.contrib.auth.models import User
 from datetime import timedelta
@@ -200,3 +201,15 @@ class AirlineTestCase(TestCase):
 
         final_length = len(Airline.objects.all())
         self.assertEqual(final_length, original_length - 1)
+
+    def test_airline_view_get(self):
+        response = self.client.get(reverse("airline_crud"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Azul")
+
+    def test_airline_view_post(self):
+        airline_data = {"name": "Laranja Airlines", "flight_identifier": "LRJ"}
+
+        response = self.client.post(reverse("airline_crud"), data=airline_data)
+        self.assertEqual(response.status_code, 201)
+        self.assertContains(response, "Laranja")
