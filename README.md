@@ -41,4 +41,9 @@
 - A partir daí será possível criar, deletar, atualizar Voos, Pilotos, Usuários e Aeroportos.
 
 
+## Script de testes
+- Realiza série de comandos para que aplicação esteja sempre atualizada quanto ao banco de dados
+- Para rodar, na raiz do projeto, utilizar o comando `./test_script.sh`
+
+
  
