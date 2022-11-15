@@ -21,5 +21,8 @@ urlpatterns = [
         name="airline_delete",
     ),
     path("home/monitoring/", views.monitoring, name="monitoring"),
+    path(
+        "home/monitoring/<flight_id>", views.monitoring_update, name="monitoring_update"
+    ),
     path("home/reports/", views.reports, name="reports"),
 ]

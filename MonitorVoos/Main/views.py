@@ -45,7 +45,22 @@ def reports(request):
 
 @login_required
 def monitoring(request):
-    return render(request, "monitoring.html")
+    form = Newflightform()
+    form.data = Flight.objects.all()
+
+    return render(request, "monitoring.html", {"form": form})
+
+
+@login_required
+def monitoring_update(request, flight_id):
+    flight = Flight.objects.get(pk=flight_id)
+    form = Newflightform(request.POST or None, instance=flight)
+    if request.method == "POST":
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/monitoring")
+    return render(request, "monitoring/monitoring_update.html", {"form": form})
 
 
 @login_required
@@ -82,7 +97,7 @@ def flights_update(request, flight_id):
     return render(request, "flights/flights_update.html", {"form": form})
 
 
-def flights_delete(request, flight_id):
+def flights_delete(flight_id):
     Flight.objects.get(pk=flight_id).delete()
     return redirect("/home/flights_crud")
 

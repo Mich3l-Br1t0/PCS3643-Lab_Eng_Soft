@@ -165,7 +165,7 @@
             <div class="second_container" id="second">
                 <form method="post">
                     {% csrf_token %}
-                    {% for field in form %}
+                    {% for field in data %}
                     <div class="form-group">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {% render_field field class="form-control" %}
