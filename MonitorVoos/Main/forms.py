@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Airline, Flight
+from .models import Airline, Flight, Airport
 
 PROFESSION_CHOICES = [
     ("Manager", "Gerente de Operações"),
@@ -99,6 +99,19 @@ class Newairlineform(ModelForm):
     class Meta:
         model = Airline
         fields = ("name", "flight_identifier")
+
+
+class AirportForm(forms.ModelForm):
+    class Meta:
+        model = Airport
+        fields = "__all__"
+        labels = {
+            "icao": "Código ICAO",
+            "name": "Nome",
+            "city": "Cidade",
+            "state": "Estado",
+            "country": "País",
+        }
 
 
 class ReportForm(forms.Form):
