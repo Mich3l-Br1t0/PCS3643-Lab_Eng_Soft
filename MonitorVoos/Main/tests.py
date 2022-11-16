@@ -213,3 +213,16 @@ class AirlineTestCase(TestCase):
         response = self.client.post(reverse("airline_crud"), data=airline_data)
         self.assertEqual(response.status_code, 201)
         self.assertContains(response, "Laranja")
+
+    def test_airline_view_update(self):
+        airline_data = {"name": "Laranja TOP Airlines", "flight_identifier": "LRJ"}
+
+        response = self.client.post(reverse("airline_update:3"), data=airline_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "TOP")
+
+    def test_airline_view_delete(self):
+        original_length = len(Airline.objects.all())
+        self.client.delete(reverse("airline_delete:3"))
+        new_length = len(Airline.objects.all())
+        self.assertEqual(new_length, original_length - 1)
