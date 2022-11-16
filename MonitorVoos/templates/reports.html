@@ -80,6 +80,8 @@
     <link href="{% static 'css\navbar.css' %}" rel="stylesheet">
 </head>
 
+{% load crispy_forms_tags %}
+
 <body>
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
@@ -104,6 +106,14 @@
                 </div>
             </div>
         </nav>
+    </div>
+    {% load widget_tweaks %}
+    <div>
+        <form method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+        </form>
     </div>
 </body>
 

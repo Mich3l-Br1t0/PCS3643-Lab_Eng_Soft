@@ -99,3 +99,23 @@ class Newairlineform(ModelForm):
     class Meta:
         model = Airline
         fields = ("name", "flight_identifier")
+
+
+class ReportForm(forms.Form):
+    start_date = forms.DateField(
+        label='Data início', widget=forms.SelectDateWidget())
+    end_date = forms.DateField(
+        label='Data fim', widget=forms.SelectDateWidget())
+    Airline = forms.ModelChoiceField(
+        queryset=Airline.objects.all(), required=False, label="Companhia Aérea")
+    # Todos os voos do sistema num período
+    # Todos os voos de uma companhia aérea num período + detalhes
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
+        if start_date >= end_date:
+            raise ValidationError(
+                "Data de início não pode ser maior ou igual data de fim")
+        return cleaned_data
