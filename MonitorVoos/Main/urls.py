@@ -20,6 +20,5 @@ urlpatterns = [
         views.airline_delete,
         name="airline_delete",
     ),
-    path("home/monitoring/", views.monitoring, name="monitoring"),
     path("home/reports/", views.reports, name="reports"),
 ]

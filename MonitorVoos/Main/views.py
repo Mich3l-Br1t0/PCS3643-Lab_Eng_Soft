@@ -72,8 +72,7 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + " " + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -91,7 +90,10 @@ def index(request):
 
 @login_required
 def home(request):
-    return render(request, "home.html")
+    form = Newflightform()
+    form.data = Flight.objects.all()
+
+    return render(request, "home.html", {"form": form})
 
 
 @login_required
@@ -132,6 +134,17 @@ def reports(request):
 @ login_required
 def monitoring(request):
     return render(request, "monitoring.html")
+    
+@login_required
+def monitoring_update(request, flight_id):
+    flight = Flight.objects.get(pk=flight_id)
+    form = Newflightform(request.POST or None, instance=flight)
+    if request.method == "POST":
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home")
+    return render(request, "monitoring/monitoring_update.html", {"form": form})
 
 
 @ login_required
@@ -172,7 +185,7 @@ def flights_update(request, flight_id):
     return render(request, "flights/flights_update.html", {"form": form})
 
 
-def flights_delete(request, flight_id):
+def flights_delete(flight_id):
     Flight.objects.get(pk=flight_id).delete()
     return redirect("/home/flights_crud")
 
@@ -210,6 +223,6 @@ def airline_update(request, airline_id):
     return render(request, "airlines/airline_update.html", {"form": form})
 
 
-def airline_delete(request, airline_id):
+def airline_delete(airline_id):
     Airline.objects.get(pk=airline_id).delete()
     return redirect("/home/airline_crud")
