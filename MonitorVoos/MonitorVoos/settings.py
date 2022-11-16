@@ -33,10 +33,9 @@ ALLOWED_HOSTS = []
 
 AUTHENTICATION_BACKENDS = [
     # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
-    'axes.backends.AxesStandaloneBackend',
-
+    "axes.backends.AxesStandaloneBackend",
     # Django ModelBackend is the default authentication backend.
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 INSTALLED_APPS = [
@@ -49,7 +48,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "Main",
     "crispy_forms",
-    "axes"
+    "axes",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'axes.middleware.AxesMiddleware'
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "MonitorVoos.urls"

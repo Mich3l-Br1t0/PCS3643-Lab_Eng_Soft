@@ -55,6 +55,11 @@ class Airline(models.Model):
 
     class Meta:
         db_table = "airlines"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["flight_identifier"], name="unique flight identifier"
+            )
+        ]
 
     def __str__(self):
         return self.name

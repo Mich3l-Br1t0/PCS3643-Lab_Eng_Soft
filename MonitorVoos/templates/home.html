@@ -101,9 +101,6 @@
                             <a class="nav-link" href="reports">Relatorios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="monitoring">Monitorar Voos</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="flights_crud">Voos</a>
                         </li>
                         <li class="nav-item">
@@ -120,13 +117,41 @@
                             </a>
                         </li>
                     </ul>
-                    <form class="search" role=" search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                    </form>
                 </div>
             </div>
         </nav>
     </div>
+    <div class="container">
+        <table class="table table-striped table-hover table-bordered">
+            {% for flights in form.data %}
+            <tr>
+                <td>
+                    <p class="title">
+                        <a href="{% url 'flights_update' flights.id %}">
+                            {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
+                        </a>
+                    </p>
+                    <p>
+                        Piloto> {{flights.pilot}}
+                    </p>
+                    <p>
+                        Partida estimada: {{flights.estimated_departure}}
+                    </p>
+                    <p>
+                        Chegada estimada: {{flights.estimated_arrival}}
+                    </p>
+                    <p>
+                        Status atual: {{flights.status}}
+                    </p>
+                </td>
+                <td align="right">
+                    <a href="{% url 'flights_update' flights.id %}" class="btn btn-primary">Atualizar Dados</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
 </body>
 
 </html>
