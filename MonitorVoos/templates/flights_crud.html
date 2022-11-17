@@ -116,9 +116,16 @@
                 <div class="collapse navbar-collapse" id="navbarsExample04">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="../">
+                            <a class="nav-link" href="{% url 'crud'%}">
                                 <span class="material-symbols-outlined">
-                                    home
+                                    arrow_back
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout'%}">
+                                <span class="material-symbols-outlined">
+                                    logout
                                 </span>
                             </a>
                         </li>
@@ -127,11 +134,11 @@
             </div>
         </nav>
     </div>
-    {% if form.errors %}
-    <div class="alert alert-danger">
-        {{ form.errors }}
-    </div>
-    {% endif %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+        {% endif %}
     <div class="container">
         <main class="double_screen">
             <div class="main_container">

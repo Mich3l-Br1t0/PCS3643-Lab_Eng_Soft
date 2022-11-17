@@ -61,7 +61,6 @@ class Newflightform(ModelForm):
             "estimated_departure",
             "estimated_arrival",
             "pilot",
-            "origin_airport",
             "destination_airport",
             "airline",
             "status",
@@ -84,6 +83,10 @@ class Newflightform(ModelForm):
                 "Aeroporto de destino não pode ser igual o de partida")
         estimated_departure = cleaned_data.get("estimated_departure")
         estimated_arrival = cleaned_data.get("estimated_arrival")
+        if not estimated_arrival:
+            return cleaned_data
+        if not estimated_departure:
+            return cleaned_data
         if estimated_departure > estimated_arrival:
             raise ValidationError(
                 "Partida estimada não pode ser maior que chegada")
