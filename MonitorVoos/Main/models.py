@@ -19,7 +19,7 @@ class Pilot(models.Model):
         ]
 
     def __str__(self):
-        return self.name + " - " + self.anac_code
+        return self.name
 
 
 class User_data(models.Model):
@@ -29,8 +29,7 @@ class User_data(models.Model):
 
     class Meta:
         db_table = "users_data"
-        constraints = [models.UniqueConstraint(
-            fields=["cpf"], name="unique document")]
+        constraints = [models.UniqueConstraint(fields=["cpf"], name="unique document")]
 
 
 class Airport(models.Model):
@@ -42,8 +41,7 @@ class Airport(models.Model):
 
     class Meta:
         db_table = "airports"
-        constraints = [models.UniqueConstraint(
-            fields=["icao"], name="unique icao")]
+        constraints = [models.UniqueConstraint(fields=["icao"], name="unique icao")]
 
     def __str__(self):
         return self.name
