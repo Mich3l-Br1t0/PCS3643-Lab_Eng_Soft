@@ -80,6 +80,10 @@
             margin-right: 3rem;
         }
 
+        .title {
+            color: skyblue;
+        }
+
         .cell-sm {
             width: 5rem;
         }
@@ -177,11 +181,9 @@
                     {{flights.id}}
                 </td>
                 <td class="cell">
-                    <p class="title">
-                        <a href="{% url 'flights_update' flights.id %}">
-                            {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
-                        </a>
-                    </p>
+                    <a href="{% url 'flights_update' flights.id %}" class="title">
+                        {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
+                    </a>
                 </td>
                 <td>
                     <p>
