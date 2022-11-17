@@ -108,10 +108,15 @@
         </nav>
     </div>
     {% load widget_tweaks %}
-    <div>
+    <div class="container">
         <form method="POST" class="form-group">
             {% csrf_token %}
-            {{ form|crispy }}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% render_field field class="form-control" %}
+            </div>
+            {% endfor %}
             <button type="submit" class="btn btn-primary">Gerar Relatório</button>
         </form>
     </div>
