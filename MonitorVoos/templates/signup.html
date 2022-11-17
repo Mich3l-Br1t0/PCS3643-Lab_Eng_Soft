@@ -65,6 +65,18 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
+
+        .field_label {
+            color: white;
+        }
+
+        .back {
+            color: skyblue;
+        }
+
+        .form-log {
+            margin-top: -2rem;
+        }
     </style>
 
 
@@ -74,18 +86,24 @@
 
 {% load crispy_forms_tags %}
 
-<body class="bg-light">
+<body class="bg-secondary">
 
     <div class="container">
         <main>
             <div class="py-5 text-center">
-                <h2>Criar nova conta</h2>
-                <a href="../../">Voltar</a>
+                <h2 class="field_label">Criar nova conta</h2>
+                <a href="../../" class="back">Voltar</a>
             </div>
-            <div>
+            {% load widget_tweaks %}
+            <div class="form-log">
                 <form method="POST" class="form-group">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="field_label">{{ field.label }}</label>
+                        {% render_field field class="form-control" %}
+                    </div>
+                    {% endfor %}
                     <button type="submit" class="btn btn-primary">Registrar</button>
                 </form>
             </div>
