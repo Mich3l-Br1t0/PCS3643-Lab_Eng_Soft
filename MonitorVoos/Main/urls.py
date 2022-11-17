@@ -6,6 +6,13 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("home/", views.home, name="home"),
     path("signup/", views.signup, name="signup"),
+    path("home/airport_crud", views.airport_crud, name="airport_crud"),
+    path("home/airport_crud/<airport_id>", views.airport_update, name="airport_update"),
+    path(
+        "home/airport_crud/delete/<airport_id>",
+        views.airport_delete,
+        name="airport_delete",
+    ),
     path("home/flights_crud/", views.flights_crud, name="flights_crud"),
     path("home/airline_crud/", views.airline_crud, name="airline_crud"),
     path("home/flights_crud/<flight_id>", views.flights_update, name="flights_update"),
@@ -20,6 +27,5 @@ urlpatterns = [
         views.airline_delete,
         name="airline_delete",
     ),
-    path("home/monitoring/", views.monitoring, name="monitoring"),
     path("home/reports/", views.reports, name="reports"),
 ]
