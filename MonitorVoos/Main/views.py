@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
 from django.contrib import messages
 from .forms import RegisterForm, Newflightform, Newairlineform, AirportForm, ReportForm
 from Main.models import User_data, Flight, Pilot, Airline, Airport
@@ -73,21 +74,30 @@ def createPDF(type, flights, airline, start_date, end_date):
 
 
 def signup(request):
+    def assign_user_to_group(user, group_name):
+        group_object = Group.objects.get(name=group_name.lower())
+        user.groups.add(group_object)
+
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            User_data.objects.create(
+
+            user = User_data.objects.create(
                 user_id=form.instance.id,
                 cpf=form.data["cpf"],
                 profession=form.data["profession"],
             )
+
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
                     name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
+
+            assign_user_to_group(user, form.data["profession"])
+
             return redirect("/")
     else:
         form = RegisterForm()
