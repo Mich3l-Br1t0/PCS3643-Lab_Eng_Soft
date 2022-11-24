@@ -68,7 +68,7 @@ class Flight(models.Model):
         Pilot, on_delete=models.SET_NULL, blank=True, null=True, related_name="pilot"
     )
     origin_airport = models.ForeignKey(
-        Airport, on_delete=models.CASCADE, related_name="origin_airports"
+        Airport, on_delete=models.CASCADE, related_name="origin_airports", default=1
     )
     destination_airport = models.ForeignKey(
         Airport, on_delete=models.CASCADE, related_name="destination_airports"
