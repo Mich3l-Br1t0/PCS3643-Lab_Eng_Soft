@@ -70,6 +70,32 @@
             margin-top: 0.1rem;
         }
 
+        .flight_status {
+            color: #5eeb5b;
+        }
+
+        .custom-container {
+            margin-top: 5rem;
+            margin-left: 3rem;
+            margin-right: 3rem;
+        }
+
+        .title {
+            color: skyblue;
+        }
+
+        .cell-sm {
+            width: 5rem;
+        }
+
+        .cell {
+            width: 15rem;
+        }
+
+        .cell-bg {
+            width: 20rem;
+        }
+
         .material-symbols-outlined {
             margin-top: 0.1rem;
             font-variation-settings:
@@ -84,7 +110,7 @@
     <link href="{% static 'css\navbar.css' %}" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-secondary">
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
             <div class="container-fluid">
@@ -109,31 +135,78 @@
             </div>
         </nav>
     </div>
-    <div class="container">
-        <table class="table table-striped table-hover table-bordered">
+    <div class="custom-container">
+        <table class="table table-striped table-dark">
+            <tr>
+                <th>
+                    Código
+                </th>
+                <th>
+                    Trajeto
+                </th>
+                <th>
+                    Piloto
+                </th>
+                <th>
+                    Partida estimada
+                </th>
+                <th>
+                    Partida real
+                </th>
+                <th>
+                    Chegada estimada
+                </th>
+                <th>
+                    Chegada real
+                </th>
+                <th>
+                    Status atual
+                </th>
+            </tr>
             {% for flights in form.data %}
             <tr>
+                <td class="cell-sm">
+                    {{flights.id}}
+                </td>
+                <td class="cell">
+                    <a href="{% url 'flights_update' flights.id %}" class="title">
+                        {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
+                    </a>
+                </td>
                 <td>
-                    <p class="title">
-                        <a href="{% url 'flights_update' flights.id %}">
-                            {{flights.origin_airport.name}} -> {{flights.destination_airport.name}}
-                        </a>
-                    </p>
                     <p>
-                        Piloto> {{flights.pilot}}
-                    </p>
-                    <p>
-                        Partida estimada: {{flights.estimated_departure}}
-                    </p>
-                    <p>
-                        Chegada estimada: {{flights.estimated_arrival}}
-                    </p>
-                    <p>
-                        Status atual: {{flights.status}}
+                        {{flights.pilot}}
                     </p>
                 </td>
-                <td align="right">
-                    <a href="{% url 'flights_update' flights.id %}" class="btn btn-primary">Atualizar Dados</a>
+                <td>
+                    <p>
+                        {{flights.estimated_departure}}
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        {{flights.real_departure}}
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        {{flights.estimated_arrival}}
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        {{flights.real_arrival}}
+                    </p>
+                </td>
+                <td>
+                    <p class="flight_status">
+                        {{flights.status}}
+                    </p>
+                </td>
+
+                </td>
+                <td class="cell-sm">
+                    <a href="{% url 'flights_update' flights.id %}" class="btn btn-primary">Atualizar</a>
                 </td>
             </tr>
             {% endfor %}

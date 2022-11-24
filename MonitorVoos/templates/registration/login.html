@@ -15,16 +15,38 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css\signin.css' %}" rel="stylesheet">
+
+    <style>
+        .field_label {
+            color: white;
+        }
+
+        .signup {
+            color: skyblue;
+        }
+
+        #login-form {
+            margin-top: 2rem;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-secondary">
+    {% load widget_tweaks %}
     {% load crispy_forms_tags %}
     <main class="form-signin w-100 m-auto">
-        <h3>Login</h3>
-        <form method="post" class="form-group">
+        <h3 class="field_label">Login</h3>
+        <form method="post" class="form-group" id="login-form">
             {% csrf_token %}
-            {{form|crispy}}
-            <p><a href="/signup/">Criar conta</a></p>
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="field_label">{{ field.label }}</label>
+                {% render_field field class="form-control" %}
+            </div>
+            {% endfor %}
+            <p>
+                <a href="/signup/" class="signup">Criar conta</a>
+            </p>
             <button type="submit" class="btn btn-primary">Login</button>
             <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
         </form>
