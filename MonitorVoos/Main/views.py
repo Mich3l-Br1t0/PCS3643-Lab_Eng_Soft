@@ -2,7 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib import messages
-from .forms import RegisterForm, Newflightform, Newairlineform, AirportForm, ReportForm
+from .forms import (
+    RegisterForm,
+    Newflightform,
+    Newairlineform,
+    AirportForm,
+    ReportForm,
+    Editflightform,
+)
 from Main.models import User_data, Flight, Pilot, Airline, Airport
 from django.http import FileResponse, HttpResponse
 import io
@@ -56,8 +63,7 @@ def createPDF(type, flights, airline, start_date, end_date):
             )
             lines.append("Piloto: " + flight.pilot.name)
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
-            lines.append("Chegada Estimada: "
-                         + str(flight.estimated_departure))
+            lines.append("Chegada Estimada: " + str(flight.estimated_departure))
             lines.append("Partida Real: " + str(flight.real_departure))
             lines.append("Chegada Real: " + str(flight.real_arrival))
             lines.append("")
@@ -85,8 +91,7 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + " " + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -100,11 +105,11 @@ def index(request):
     if request.user.is_authenticated:
         user_id = request.user.pk
         user_profession = User_data.objects.get(user_id=user_id).profession
-        if user_profession == 'Manager':
+        if user_profession == "Manager":
             return redirect("/home/reports")
-        elif user_profession == 'Operator':
+        elif user_profession == "Operator":
             return redirect("/home/crud")
-        elif user_profession in ['Control', 'Pilot', "Worker"]:
+        elif user_profession in ["Control", "Pilot", "Worker"]:
             return redirect("/home")
         return redirect("/home")
     return redirect("/login")
@@ -172,33 +177,22 @@ def reports(request):
             )
             if len(flights) == 0:
                 return HttpResponse("Não há voos no período selecionado")
-            file = createPDF(
-                2, flights, flights[0].airline.name, start_date, end_date)
+            file = createPDF(2, flights, flights[0].airline.name, start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
     form = ReportForm()
     return render(request, "reports.html", {"form": form})
 
 
 @login_required
-def monitoring(request):
-    return render(request, "monitoring.html")
-
-
-@login_required
 def monitoring_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
-    form = Newflightform(request.POST or None, instance=flight)
+    form = Editflightform(request.POST or None, instance=flight)
     if request.method == "POST":
         if request.method == "POST":
             if form.is_valid():
                 form.save()
             return redirect("/home")
     return render(request, "monitoring/monitoring_update.html", {"form": form})
-
-
-@login_required
-def crud(request):
-    return render(request, "crud.html")
 
 
 @login_required
@@ -220,11 +214,11 @@ def flights_crud(request):
 @login_required
 def flights_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
-    form = Newflightform(request.POST or None, instance=flight)
+    form = Editflightform(request.POST or None, instance=flight)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("/home/flights_crud")
+            return redirect("/home")
         else:
             return render(request, "flights/flights_update.html", {"form": form})
     return render(request, "flights/flights_update.html", {"form": form})
