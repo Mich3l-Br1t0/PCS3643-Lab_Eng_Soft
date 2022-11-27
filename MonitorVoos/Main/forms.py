@@ -61,6 +61,7 @@ class Newflightform(ModelForm):
             "estimated_departure",
             "estimated_arrival",
             "pilot",
+            "origin_airport",
             "destination_airport",
             "airline",
             "status",
@@ -73,6 +74,25 @@ class Newflightform(ModelForm):
             "destination_airport": "Aeroporto de chegada",
             "airline": "Companhia Aérea",
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        origin_airport = cleaned_data.get("origin_airport")
+        destination_airport = cleaned_data.get("destination_airport")
+        if origin_airport == destination_airport:
+            raise ValidationError(
+                "Aeroporto de destino não pode ser igual o de partida"
+            )
+        estimated_departure = cleaned_data.get("estimated_departure")
+        estimated_arrival = cleaned_data.get("estimated_arrival")
+        if not estimated_arrival:
+            return cleaned_data
+        if not estimated_departure:
+            return cleaned_data
+        if estimated_departure > estimated_arrival:
+            raise ValidationError(
+                "Partida estimada não pode ser maior que chegada")
+        return cleaned_data
 
 
 class Editflightform(ModelForm):
@@ -119,7 +139,8 @@ class Editflightform(ModelForm):
         if not estimated_departure:
             return cleaned_data
         if estimated_departure > estimated_arrival:
-            raise ValidationError("Partida estimada não pode ser maior que chegada")
+            raise ValidationError(
+                "Partida estimada não pode ser maior que chegada")
         return cleaned_data
 
 
@@ -148,8 +169,10 @@ class AirportForm(forms.ModelForm):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(label="Data início", widget=forms.SelectDateWidget())
-    end_date = forms.DateField(label="Data fim", widget=forms.SelectDateWidget())
+    start_date = forms.DateField(
+        label="Data início", widget=forms.SelectDateWidget())
+    end_date = forms.DateField(
+        label="Data fim", widget=forms.SelectDateWidget())
     Airline = forms.ModelChoiceField(
         queryset=Airline.objects.all(), required=False, label="Companhia Aérea"
     )

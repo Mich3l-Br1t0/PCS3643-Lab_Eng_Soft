@@ -29,7 +29,8 @@ class User_data(models.Model):
 
     class Meta:
         db_table = "users_data"
-        constraints = [models.UniqueConstraint(fields=["cpf"], name="unique document")]
+        constraints = [models.UniqueConstraint(
+            fields=["cpf"], name="unique document")]
 
 
 class Airport(models.Model):
@@ -41,7 +42,8 @@ class Airport(models.Model):
 
     class Meta:
         db_table = "airports"
-        constraints = [models.UniqueConstraint(fields=["icao"], name="unique icao")]
+        constraints = [models.UniqueConstraint(
+            fields=["icao"], name="unique icao")]
 
     def __str__(self):
         return self.name
@@ -81,6 +83,7 @@ class Flight(models.Model):
     estimated_arrival = models.DateTimeField()
     real_departure = models.DateTimeField(blank=True, null=True)
     real_arrival = models.DateTimeField(blank=True, null=True)
+    is_origin = models.BooleanField(default=False)
 
     class Meta:
         db_table = "flights"
