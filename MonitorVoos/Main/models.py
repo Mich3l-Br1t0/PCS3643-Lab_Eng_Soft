@@ -19,7 +19,7 @@ class Pilot(models.Model):
         ]
 
     def __str__(self):
-        return self.name + " - " + self.anac_code
+        return self.name
 
 
 class User_data(models.Model):
@@ -70,7 +70,7 @@ class Flight(models.Model):
         Pilot, on_delete=models.SET_NULL, blank=True, null=True, related_name="pilot"
     )
     origin_airport = models.ForeignKey(
-        Airport, on_delete=models.CASCADE, related_name="origin_airports"
+        Airport, on_delete=models.CASCADE, related_name="origin_airports", default=1
     )
     destination_airport = models.ForeignKey(
         Airport, on_delete=models.CASCADE, related_name="destination_airports"
@@ -83,6 +83,7 @@ class Flight(models.Model):
     estimated_arrival = models.DateTimeField()
     real_departure = models.DateTimeField(blank=True, null=True)
     real_arrival = models.DateTimeField(blank=True, null=True)
+    is_origin = models.BooleanField(default=False)
 
     class Meta:
         db_table = "flights"

@@ -74,6 +74,10 @@
                 'GRAD' 0,
                 'opsz' 48
         }
+
+        .field_label {
+            color: white;
+        }
     </style>
 
     <link href="{% static 'css\crud.css' %}" rel="stylesheet">
@@ -82,7 +86,7 @@
 
 {% load crispy_forms_tags %}
 
-<body>
+<body class="bg-secondary">
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
             <div class="container-fluid">
@@ -96,9 +100,9 @@
                 <div class="collapse navbar-collapse" id="navbarsExample04">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">
+                            <a class="nav-link" href="{% url 'logout'%}">
                                 <span class="material-symbols-outlined">
-                                    home
+                                    logout
                                 </span>
                             </a>
                         </li>
@@ -113,7 +117,7 @@
             {% csrf_token %}
             {% for field in form %}
             <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}" class="field_label">{{ field.label }}</label>
                 {% render_field field class="form-control" %}
             </div>
             {% endfor %}

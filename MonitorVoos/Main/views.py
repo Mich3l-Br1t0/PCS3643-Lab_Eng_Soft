@@ -3,7 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from django.contrib import messages
-from .forms import RegisterForm, Newflightform, Newairlineform, AirportForm, ReportForm
+from .forms import (
+    RegisterForm,
+    Newflightform,
+    Newairlineform,
+    AirportForm,
+    ReportForm,
+    Editflightform,
+)
 from Main.models import User_data, Flight, Pilot, Airline, Airport
 from django.http import FileResponse, HttpResponse
 import io
@@ -57,7 +64,8 @@ def createPDF(type, flights, airline, start_date, end_date):
             )
             lines.append("Piloto: " + flight.pilot.name)
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
-            lines.append("Chegada Estimada: " + str(flight.estimated_departure))
+            lines.append("Chegada Estimada: "
+                         + str(flight.estimated_departure))
             lines.append("Partida Real: " + str(flight.real_departure))
             lines.append("Chegada Real: " + str(flight.real_arrival))
             lines.append("")
@@ -91,7 +99,8 @@ def signup(request):
 
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"] + " " + form.data["last_name"],
+                    name=form.data["first_name"]
+                    + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -106,6 +115,14 @@ def signup(request):
 
 def index(request):
     if request.user.is_authenticated:
+        user_id = request.user.pk
+        user_profession = User_data.objects.get(user_id=user_id).profession
+        if user_profession == "Manager":
+            return redirect("/home/reports")
+        elif user_profession == "Operator":
+            return redirect("/home/crud")
+        elif user_profession in ["Control", "Pilot", "Worker"]:
+            return redirect("/home")
         return redirect("/home")
     return redirect("/login")
 
@@ -116,6 +133,11 @@ def home(request):
     form.data = Flight.objects.all()
 
     return render(request, "home.html", {"form": form})
+
+
+@login_required
+def crud(request):
+    return render(request, "crud.html")
 
 
 @login_required
@@ -172,21 +194,17 @@ def reports(request):
             )
             if len(flights) == 0:
                 return HttpResponse("Não há voos no período selecionado")
-            file = createPDF(2, flights, flights[0].airline.name, start_date, end_date)
+            file = createPDF(
+                2, flights, flights[0].airline.name, start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
     form = ReportForm()
     return render(request, "reports.html", {"form": form})
 
 
 @login_required
-def monitoring(request):
-    return render(request, "monitoring.html")
-
-
-@login_required
 def monitoring_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
-    form = Newflightform(request.POST or None, instance=flight)
+    form = Editflightform(request.POST or None, instance=flight)
     if request.method == "POST":
         if request.method == "POST":
             if form.is_valid():
@@ -197,19 +215,14 @@ def monitoring_update(request, flight_id):
 
 @login_required
 def flights_crud(request):
-    if not (request.user.is_superuser):
-        user_id = request.user.pk
-        user_profession = User_data.objects.get(user_id=user_id).profession
-    else:
-        user_profession = "superuser"
-
-    if not (user_profession in ["manager", "superuser"]):
-        return redirect("/")
-
     if request.method == "POST":
         form = Newflightform(request.POST)
         if form.is_valid():
             form.save()
+            if form.data['origin_airport'] == '1':
+                flight = Flight.objects.get(pk=form.instance.pk)
+                flight.is_origin = True
+                flight.save()
             messages.success(request, "Voo Adicionado")
             return redirect("/home/flights_crud")
         form.flights = Flight.objects.all()
@@ -223,31 +236,23 @@ def flights_crud(request):
 @login_required
 def flights_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
-    form = Newflightform(request.POST or None, instance=flight)
+    form = Editflightform(request.POST or None, instance=flight)
     if request.method == "POST":
-        if request.method == "POST":
-            if form.is_valid():
-                form.save()
-            return redirect("/home/flights_crud")
+        if form.is_valid():
+            form.save()
+            return redirect("/home")
+        else:
+            return render(request, "flights/flights_update.html", {"form": form})
     return render(request, "flights/flights_update.html", {"form": form})
 
 
-def flights_delete(flight_id):
+def flights_delete(request, flight_id):
     Flight.objects.get(pk=flight_id).delete()
     return redirect("/home/flights_crud")
 
 
 @login_required
 def airline_crud(request):
-    if not (request.user.is_superuser):
-        user_id = request.user.pk
-        user_profession = User_data.objects.get(user_id=user_id).profession
-    else:
-        user_profession = "superuser"
-
-    if not (user_profession in ["manager", "superuser"]):
-        return redirect("/")
-
     if request.method == "POST":
         form = Newairlineform(request.POST)
         if form.is_valid():
@@ -270,22 +275,13 @@ def airline_update(request, airline_id):
     return render(request, "airlines/airline_update.html", {"form": form})
 
 
-def airline_delete(airline_id):
+def airline_delete(request, airline_id):
     Airline.objects.get(pk=airline_id).delete()
     return redirect("/home/airline_crud")
 
 
 @login_required
 def airport_crud(request):
-    if not (request.user.is_superuser):
-        user_id = request.user.pk
-        user_profession = User_data.objects.get(user_id=user_id).profession
-    else:
-        user_profession = "superuser"
-
-    if not (user_profession in ["manager", "superuser"]):
-        return redirect("/")
-
     if request.method == "POST":
         form = AirportForm(request.POST)
         if form.is_valid():
@@ -311,6 +307,6 @@ def airport_update(request, airport_id):
     return render(request, "airports/airport_update.html", {"form": form})
 
 
-def airport_delete(airport_id):
+def airport_delete(request, airport_id):
     Airport.objects.get(pk=airport_id).delete()
     return redirect("/home/airport_crud")
