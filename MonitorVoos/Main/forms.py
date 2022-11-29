@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Airline, Flight, Airport
+from .models import Airline, Flight, Airport, Pilot
 
 PROFESSION_CHOICES = [
     ("Manager", "Gerente de Operações"),
@@ -173,11 +173,9 @@ class ReportForm(forms.Form):
         label="Data início", widget=forms.SelectDateWidget())
     end_date = forms.DateField(
         label="Data fim", widget=forms.SelectDateWidget())
-    Airline = forms.ModelChoiceField(
-        queryset=Airline.objects.all(), required=False, label="Companhia Aérea"
+    Pilot = forms.ModelChoiceField(
+        queryset=Pilot.objects.all(), required=False, label="Piloto (Selecionar para gerar relatório de voos do piloto no período)"
     )
-    # Todos os voos do sistema num período
-    # Todos os voos de uma companhia aérea num período + detalhes
 
     def clean(self):
         cleaned_data = super().clean()
