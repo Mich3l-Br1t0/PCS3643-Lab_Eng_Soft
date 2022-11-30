@@ -5,21 +5,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Airline, Flight, Airport
-
-PROFESSION_CHOICES = [
-    ("Manager", "Gerente de Operações"),
-    ("Control", "Torre de Controle"),
-    ("Pilot", "Piloto"),
-    ("Worker", "Funcionário da Companhia Aérea"),
-    ("Operator", "Operador de voo"),
-]
-
-STATUS_CHOICES = [
-    ("Cadastrado", "Cadastrado"),
-    ("Em voo", "Em voo"),
-    ("Aguardando Embarque", "Aguardado Embarque"),
-    ("Aguardando Desembarque", "Aguardando Desembarque"),
-]
+from .commons import STATUS_CHOICES, PROFESSION_CHOICES
 
 
 class RegisterForm(UserCreationForm):
@@ -90,8 +76,7 @@ class Newflightform(ModelForm):
         if not estimated_departure:
             return cleaned_data
         if estimated_departure > estimated_arrival:
-            raise ValidationError(
-                "Partida estimada não pode ser maior que chegada")
+            raise ValidationError("Partida estimada não pode ser maior que chegada")
         return cleaned_data
 
 
@@ -139,8 +124,7 @@ class Editflightform(ModelForm):
         if not estimated_departure:
             return cleaned_data
         if estimated_departure > estimated_arrival:
-            raise ValidationError(
-                "Partida estimada não pode ser maior que chegada")
+            raise ValidationError("Partida estimada não pode ser maior que chegada")
         return cleaned_data
 
 
@@ -169,10 +153,8 @@ class AirportForm(forms.ModelForm):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(
-        label="Data início", widget=forms.SelectDateWidget())
-    end_date = forms.DateField(
-        label="Data fim", widget=forms.SelectDateWidget())
+    start_date = forms.DateField(label="Data início", widget=forms.SelectDateWidget())
+    end_date = forms.DateField(label="Data fim", widget=forms.SelectDateWidget())
     Airline = forms.ModelChoiceField(
         queryset=Airline.objects.all(), required=False, label="Companhia Aérea"
     )
