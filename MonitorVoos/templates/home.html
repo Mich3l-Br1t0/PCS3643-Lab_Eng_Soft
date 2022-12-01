@@ -70,6 +70,10 @@
             margin-top: 0.1rem;
         }
 
+        .canceled {
+            color: red;
+        }
+
         .flight_status {
             color: #5eeb5b;
         }
@@ -246,9 +250,15 @@
                     </p>
                 </td>
                 <td>
+                    {% if flights.status == "Cancelado" %}
+                    <p class="canceled">
+                        {{flights.status}}
+                    </p>
+                    {% else %}
                     <p class="flight_status">
                         {{flights.status}}
                     </p>
+                    {% endif %}
                 </td>
                 <td>
                     <p class="departure">Saída</p>
