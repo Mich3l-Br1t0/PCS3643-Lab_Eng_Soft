@@ -85,7 +85,7 @@
 </head>
 
 
-<body>
+<body class="bg-secondary">
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
             <div class="container-fluid">
@@ -111,28 +111,37 @@
         </nav>
     </div>
     <div class="container">
-        <table class="table table-striped table-hover table-bordered">
+        <table class="table table-striped table-dark">
             <tr>
-                <p >
+                <th>
+                    Voos
+                </th>
+                <th>
+                    Aeroportos
+                </th>
+                <th>
+                    Companhias Aéreas
+                </th>
+            </tr>
+            <tr>
+                <td>
                     <a href="{%url 'airport_crud'%}">
                         Aeroportos
                     </a>
-                </p>
-            </tr>
-            <tr>
-                <p>
+                </td>
+                <td>
                     <a href="{% url 'airline_crud' %}">
                         Companhias Aéreas
                     </a>
-                </p>
-            </tr>
-            <tr>
-                <p>
+                </td>
+                <td>
                     <a href="{% url 'flights_crud' %}">
-                        Voos
+                        Cadastrar Voos
                     </a>
-                </p>
+                </td>
+
             </tr>
+
         </table>
     </div>
 </body>
