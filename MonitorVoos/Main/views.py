@@ -214,7 +214,7 @@ def monitoring_update(request, flight_id):
 
 
 @login_required
-@user_is_in_group(["operator"])
+@user_is_in_group(["operator", "worker", "pilot", "control"])
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
@@ -235,7 +235,7 @@ def flights_crud(request):
 
 
 @login_required
-@user_is_in_group(["operator"])
+@user_is_in_group(["operator", "worker", "pilot", "control"])
 def flights_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
     form = Editflightform(request.POST or None, instance=flight)
