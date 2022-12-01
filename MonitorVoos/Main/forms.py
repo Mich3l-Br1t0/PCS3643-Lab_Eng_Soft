@@ -16,9 +16,12 @@ PROFESSION_CHOICES = [
 
 STATUS_CHOICES = [
     ("Cadastrado", "Cadastrado"),
+    ("Cancelado", "Cancelado"),
+    ("Programado", "Programado"),
+    ("Taxiando", "Taxiando"),
+    ("Pronto", "Pronto"),
     ("Em voo", "Em voo"),
-    ("Aguardando Embarque", "Aguardado Embarque"),
-    ("Aguardando Desembarque", "Aguardando Desembarque"),
+    ("Aterrisado", "Aterrisado"),
 ]
 
 
@@ -90,8 +93,7 @@ class Newflightform(ModelForm):
         if not estimated_departure:
             return cleaned_data
         if estimated_departure > estimated_arrival:
-            raise ValidationError(
-                "Partida estimada não pode ser maior que chegada")
+            raise ValidationError("Partida estimada não pode ser maior que chegada")
         return cleaned_data
 
 
@@ -139,8 +141,7 @@ class Editflightform(ModelForm):
         if not estimated_departure:
             return cleaned_data
         if estimated_departure > estimated_arrival:
-            raise ValidationError(
-                "Partida estimada não pode ser maior que chegada")
+            raise ValidationError("Partida estimada não pode ser maior que chegada")
         return cleaned_data
 
 
