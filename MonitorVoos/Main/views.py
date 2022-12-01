@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
-from django.contrib.auth.decorators import user_passes_test
+from .decorators import user_is_in_group
 from django.contrib import messages
 from .forms import (
     RegisterForm,
@@ -134,13 +134,14 @@ def home(request):
     return render(request, "home.html", {"form": form})
 
 
+@user_is_in_group(["operator"])
 @login_required(login_url="home/crud/")
 def crud(request):
     return render(request, "crud.html")
 
 
 @login_required
-@user_passes_test(lambda u: Group.objects.get(name="manager") in u.groups.all())
+@user_is_in_group(["manager"])
 def reports(request):
     if request.method == "POST":
         data = request.POST
@@ -201,6 +202,7 @@ def reports(request):
 
 
 @login_required
+@user_is_in_group(["pilot", "control", "worker"])
 def monitoring_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
     form = Editflightform(request.POST or None, instance=flight)
@@ -212,7 +214,7 @@ def monitoring_update(request, flight_id):
 
 
 @login_required
-@user_passes_test(lambda u: Group.objects.get(name="operator") in u.groups.all())
+@user_is_in_group(["operator"])
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
@@ -233,7 +235,7 @@ def flights_crud(request):
 
 
 @login_required
-@user_passes_test(lambda u: Group.objects.get(name="operator") in u.groups.all())
+@user_is_in_group(["operator"])
 def flights_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
     form = Editflightform(request.POST or None, instance=flight)
@@ -246,12 +248,15 @@ def flights_update(request, flight_id):
     return render(request, "flights/flights_update.html", {"form": form})
 
 
+@login_required
+@user_is_in_group(["operator"])
 def flights_delete(request, flight_id):
     Flight.objects.get(pk=flight_id).delete()
     return redirect("/home/flights_crud")
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airline_crud(request):
     if request.method == "POST":
         form = Newairlineform(request.POST)
@@ -265,6 +270,7 @@ def airline_crud(request):
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airline_update(request, airline_id):
     airline = Airline.objects.get(pk=airline_id)
     form = Newairlineform(request.POST or None, instance=airline)
@@ -275,41 +281,45 @@ def airline_update(request, airline_id):
     return render(request, "airlines/airline_update.html", {"form": form})
 
 
+@login_required
+@user_is_in_group(["operator"])
 def airline_delete(request, airline_id):
     Airline.objects.get(pk=airline_id).delete()
     return redirect("/home/airline_crud")
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airport_crud(request):
-    if Group.objects.get(name="operator") in request.user.groups.all():
-        if request.method == "POST":
-            form = AirportForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect("/home/airport_crud")
-            form.airports = Airport.objects.all()
-            return render(request, "airport_crud.html", {"form": form})
-
-        else:
-            form = AirportForm()
-            form.airports = Airport.objects.all()
+    if request.method == "POST":
+        form = AirportForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/home/airport_crud")
+        form.airports = Airport.objects.all()
         return render(request, "airport_crud.html", {"form": form})
     else:
-        return redirect("/home")
+        form = AirportForm()
+        form.airports = Airport.objects.all()
+    return render(request, "airport_crud.html", {"form": form})
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airport_update(request, airport_id):
-    airport = Airport.objects.get(pk=airport_id)
-    form = AirportForm(request.POST or None, instance=airport)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-        return redirect("/home/airport_crud")
-    return render(request, "airports/airport_update.html", {"form": form})
+    if Group.objects.get(name="operator") in request.user.groups.all():
+        airport = Airport.objects.get(pk=airport_id)
+        form = AirportForm(request.POST or None, instance=airport)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/airport_crud")
+        return render(request, "airports/airport_update.html", {"form": form})
+    else:
+        return HttpResponse("User is not authorized to access this page", status=403)
 
 
+@user_is_in_group(["operator"])
 def airport_delete(request, airport_id):
     Airport.objects.get(pk=airport_id).delete()
     return redirect("/home/airport_crud")
