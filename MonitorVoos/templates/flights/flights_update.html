@@ -81,6 +81,10 @@
             visibility: hidden;
         }
 
+        .field_label {
+            color: white;
+        }
+
         .double_screen {
             display: flex;
             flex-direction: row;
@@ -101,7 +105,7 @@
     <link href="{% static 'css\navbar.css' %}" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-secondary">
 
     <div class="nav_bar">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
@@ -138,8 +142,13 @@
             {% csrf_token %}
             {% for field in form %}
             <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.label == "Status" or field.label == "Partida real" %}
+                <label for="{{ field.id_for_label }}" class="field_label">{{ field.label }}</label>
                 {% render_field field class="form-control" %}
+                {% elif field.label == "Chegada real" %}
+                <label for="{{ field.id_for_label }}" class="field_label">{{ field.label }}</label>
+                {% render_field field class="form-control" %}
+                {% endif %}
             </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Atualizar</button>
