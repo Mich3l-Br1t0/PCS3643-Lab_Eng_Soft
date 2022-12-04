@@ -22,7 +22,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 
-def createPDF(type, flights, airline, start_date, end_date):
+def createPDF(type, flights, pilot, start_date, end_date):
     buff = io.BytesIO()
     c = canvas.Canvas(buff, pagesize=letter, bottomup=0)
 
@@ -45,7 +45,8 @@ def createPDF(type, flights, airline, start_date, end_date):
             lines.append("")
 
     if type == 2:
-        lines.append("Companhia: " + airline)
+        lines.append("Piloto: " + pilot)
+        lines.append("Voos no período: " + str(len(flights)))
         lines.append("")
         for flight in flights:
             lines.append(
@@ -64,7 +65,6 @@ def createPDF(type, flights, airline, start_date, end_date):
                 + " - "
                 + flight.origin_airport.country
             )
-            lines.append("Piloto: " + flight.pilot.name)
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
             lines.append("Chegada Estimada: " + str(flight.estimated_departure))
             lines.append("Partida Real: " + str(flight.real_departure))
@@ -124,7 +124,7 @@ def index(request):
         elif user_profession in ["Control", "Pilot", "Worker"]:
             return redirect("/home")
         return redirect("/home")
-    return redirect("/login")
+    return redirect("/panel")
 
 
 @login_required
@@ -139,6 +139,12 @@ def home(request):
 @login_required(login_url="home/crud/")
 def crud(request):
     return render(request, "crud.html")
+
+
+def panel(request):
+    form = Newflightform()
+    form.data = Flight.objects.all()
+    return render(request, "panel.html", {"form": form})
 
 
 @login_required
@@ -163,7 +169,7 @@ def reports(request):
             + "-"
             + data["end_date_day"]
         )
-        if data["Airline"] == "":
+        if data["Pilot"] == "":
             flights = Flight.objects.filter(
                 estimated_departure__gte=datetime.date(
                     int(data["start_date_year"]),
@@ -192,7 +198,7 @@ def reports(request):
                     int(data["end_date_month"]),
                     int(data["end_date_day"]),
                 ),
-                airline_id=data["Airline"],
+                pilot_id=data["Pilot"],
             )
             if len(flights) == 0:
                 return HttpResponse("Não há voos no período selecionado")
