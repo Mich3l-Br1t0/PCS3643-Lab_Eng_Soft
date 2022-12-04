@@ -90,8 +90,7 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + " " + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -112,7 +111,7 @@ def index(request):
         elif user_profession in ["Control", "Pilot", "Worker"]:
             return redirect("/home")
         return redirect("/home")
-    return redirect("/login")
+    return redirect("/panel")
 
 
 @login_required
@@ -126,6 +125,12 @@ def home(request):
 @login_required
 def crud(request):
     return render(request, "crud.html")
+
+
+def panel(request):
+    form = Newflightform()
+    form.data = Flight.objects.all()
+    return render(request, "panel.html", {"form": form})
 
 
 @login_required
@@ -207,7 +212,7 @@ def flights_crud(request):
         form = Newflightform(request.POST)
         if form.is_valid():
             form.save()
-            if form.data['origin_airport'] == '1':
+            if form.data["origin_airport"] == "1":
                 flight = Flight.objects.get(pk=form.instance.pk)
                 flight.is_origin = True
                 flight.save()
