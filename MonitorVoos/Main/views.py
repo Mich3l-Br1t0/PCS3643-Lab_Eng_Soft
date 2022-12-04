@@ -63,8 +63,7 @@ def createPDF(type, flights, airline, start_date, end_date):
             )
             lines.append("Piloto: " + flight.pilot.name)
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
-            lines.append("Chegada Estimada: "
-                         + str(flight.estimated_departure))
+            lines.append("Chegada Estimada: " + str(flight.estimated_departure))
             lines.append("Partida Real: " + str(flight.real_departure))
             lines.append("Chegada Real: " + str(flight.real_arrival))
             lines.append("")
@@ -92,8 +91,7 @@ def signup(request):
             )
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"]
-                    + " " + form.data["last_name"],
+                    name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -114,7 +112,7 @@ def index(request):
         elif user_profession in ["Control", "Pilot", "Worker"]:
             return redirect("/home")
         return redirect("/home")
-    return redirect("/login")
+    return redirect("/panel")
 
 
 @login_required
@@ -128,6 +126,12 @@ def home(request):
 @login_required
 def crud(request):
     return render(request, "crud.html")
+
+
+def panel(request):
+    form = Newflightform()
+    form.data = Flight.objects.all()
+    return render(request, "panel.html", {"form": form})
 
 
 @login_required
@@ -184,8 +188,7 @@ def reports(request):
             )
             if len(flights) == 0:
                 return HttpResponse("Não há voos no período selecionado")
-            file = createPDF(
-                2, flights, flights[0].airline.name, start_date, end_date)
+            file = createPDF(2, flights, flights[0].airline.name, start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
     form = ReportForm()
     return render(request, "reports.html", {"form": form})
@@ -209,7 +212,7 @@ def flights_crud(request):
         form = Newflightform(request.POST)
         if form.is_valid():
             form.save()
-            if form.data['origin_airport'] == '1':
+            if form.data["origin_airport"] == "1":
                 flight = Flight.objects.get(pk=form.instance.pk)
                 flight.is_origin = True
                 flight.save()
