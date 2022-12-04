@@ -170,3 +170,19 @@ class ReportForm(forms.Form):
                 "Data de início não pode ser maior ou igual data de fim"
             )
         return cleaned_data
+
+
+class EditStatusForm(forms.ModelForm):
+
+    status = forms.CharField(
+        label="Status", widget=forms.Select(choices=STATUS_CHOICES)
+    )
+
+    class Meta:
+        model = Flight
+        fields = ["status", "real_departure", "real_arrival"]
+        labels = {
+            "real_departure": "Partida Real (AAAA-MM-DD hh:mm)",
+            "real_arrival": "Chegada Real (AAAA-MM-DD hh:mm)",
+            "status": "Status",
+        }

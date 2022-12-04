@@ -11,8 +11,9 @@ from .forms import (
     AirportForm,
     ReportForm,
     Editflightform,
+    EditStatusForm,
 )
-from Main.models import User_data, Flight, Pilot, Airline, Airport
+from .models import User_data, Flight, Pilot, Airline, Airport
 from django.http import FileResponse, HttpResponse
 import io
 import datetime
@@ -204,17 +205,38 @@ def reports(request):
 @login_required
 @user_is_in_group(["pilot", "control", "worker"])
 def monitoring_update(request, flight_id):
+    # def which_transition(flight):
+    #     if flight.status == "Cadastrado":
+    #         flight.to_boarding_or_cancelled()
+    #     elif flight.status == "Embarcando":
+    #         flight.to_scheduled()
+
+    # def _check_real_departure_and_arrival(flight, form):
+    #     if flight.estimated_departure < form["real_departure"]:
+    #         return False
+    #     elif flight.estimated_arrival < form["real_arrival"]:
+    #         return False
+    #     elif form["real_departure"] > form["real_arrival"]:
+    #         return False
+
+    #     return True
+
     flight = Flight.objects.get(pk=flight_id)
-    form = Editflightform(request.POST or None, instance=flight)
+    form = EditStatusForm(request.POST or None, instance=flight)
     if request.method == "POST":
-        if form.is_valid():
-            form.save()
+        flight.status = form.data["status"]
+        if form.data["real_departure"] and not flight.real_departure:
+            # if _check_real_departure_and_arrival(flight, form):
+            flight.real_departure = form.data["real_departure"]
+        if form.data["real_arrival"] and not flight.real_arrival:
+            flight.real_arrival = form.data["real_arrival"]
+        flight.save()
         return redirect("/home")
     return render(request, "monitoring/monitoring_update.html", {"form": form})
 
 
 @login_required
-@user_is_in_group(["operator", "worker", "pilot", "control"])
+@user_is_in_group(["operator"])
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
@@ -242,7 +264,7 @@ def flights_update(request, flight_id):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("/home")
+            return redirect("/home/flights_crud")
         else:
             return render(request, "flights/flights_update.html", {"form": form})
     return render(request, "flights/flights_update.html", {"form": form})

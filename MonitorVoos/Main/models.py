@@ -87,8 +87,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="registered",
-        target=["boarding", "cancelled"],
+        source="Cadastrado",
+        target=["Embarcando", "Cancelado"],
         permission="Main.status_registered_to_boarding_or_cancelled",
     )
     def to_boarding_or_cancelled(self):
@@ -96,8 +96,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="boarding",
-        target="scheduled",
+        source="Embarcando",
+        target="Programado",
         permission="Main.status_boarding_to_scheduled",
     )
     def to_scheduled(self):
@@ -105,8 +105,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="scheduled",
-        target="taxiing",
+        source="Programado",
+        target="Taxiando",
         permission="Main.status_scheduled_to_taxiing",
     )
     def to_taxiing(self):
@@ -114,8 +114,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="taxiing",
-        target="ready",
+        source="Taxiando",
+        target="Pronto",
         permission="Main.status_taxiing_to_ready",
     )
     def to_ready(self):
@@ -123,8 +123,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="ready",
-        target="authorized",
+        source="Pronto",
+        target="Autorizado",
         permission="Main.status_ready_to_authorized",
     )
     def to_authorized(self):
@@ -132,8 +132,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="authorized",
-        target="flying",
+        source="Autorizado",
+        target="Em voo",
         permission="Main.status_authorized_to_flying",
     )
     def to_flying(self):
@@ -141,8 +141,8 @@ class Flight(models.Model):
 
     @transition(
         field=status,
-        source="flying",
-        target="landed",
+        source="Em voo",
+        target="Aterrissado",
         permission="Main.status_flying_to_landed",
     )
     def to_landed(self):

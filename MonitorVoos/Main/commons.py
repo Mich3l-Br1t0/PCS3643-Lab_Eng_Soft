@@ -1,13 +1,12 @@
 STATUS_CHOICES = [
-    ("registered", "Cadastrado"),
-    ("boarding", "Embarcando"),
-    ("cancelled", "Cancelado"),
-    ("scheduled", "Programado"),
-    ("taxiing", "Taxiando"),
-    ("ready", "Pronto"),
-    ("authorized", "Autorizado"),
-    ("flying", "Em voo"),
-    ("landed", "Aterrissado"),
+    ("Cadastrado", "Cadastrado"),
+    ("Embarcando", "Embarcando"),
+    ("Cancelado", "Cancelado"),
+    ("Programado", "Programado"),
+    ("Taxiando", "Taxiando"),
+    ("Pronto", "Pronto"),
+    ("Em voo", "Em voo"),
+    ("Aterrisado", "Aterrisado"),
 ]
 
 PROFESSION_CHOICES = [

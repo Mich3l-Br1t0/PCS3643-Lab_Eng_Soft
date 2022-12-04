@@ -8,7 +8,6 @@ urlpatterns = [
     path("home/", views.home, name="home"),
     path("signup/", views.signup, name="signup"),
     path("home/crud", views.crud, name="crud"),
-    path("home/<flight_id>", views.flights_update, name="flights_update"),
     path("home/airport_crud", views.airport_crud, name="airport_crud"),
     path("home/airport_crud/<airport_id>", views.airport_update, name="airport_update"),
     path(
@@ -20,8 +19,8 @@ urlpatterns = [
     path("home/airline_crud/", views.airline_crud, name="airline_crud"),
     path(
         "home/flights_crud/<flight_id>",
-        views.monitoring_update,
-        name="monitoring_update",
+        views.flights_update,
+        name="flights_update",
     ),
     path(
         "home/flights_crud/delete/<flight_id>",
@@ -35,4 +34,5 @@ urlpatterns = [
         name="airline_delete",
     ),
     path("home/reports/", views.reports, name="reports"),
+    path("home/<flight_id>/", views.monitoring_update, name="monitoring_update"),
 ]
