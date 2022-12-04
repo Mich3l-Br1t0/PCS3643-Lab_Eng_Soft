@@ -5,24 +5,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Airline, Flight, Airport, Pilot
-
-PROFESSION_CHOICES = [
-    ("Manager", "Gerente de Operações"),
-    ("Control", "Torre de Controle"),
-    ("Pilot", "Piloto"),
-    ("Worker", "Funcionário da Companhia Aérea"),
-    ("Operator", "Operador de voo"),
-]
-
-STATUS_CHOICES = [
-    ("Cadastrado", "Cadastrado"),
-    ("Cancelado", "Cancelado"),
-    ("Programado", "Programado"),
-    ("Taxiando", "Taxiando"),
-    ("Pronto", "Pronto"),
-    ("Em voo", "Em voo"),
-    ("Aterrisado", "Aterrisado"),
-]
+from .commons import STATUS_CHOICES, PROFESSION_CHOICES
 
 
 class RegisterForm(UserCreationForm):
@@ -170,12 +153,12 @@ class AirportForm(forms.ModelForm):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(
-        label="Data início", widget=forms.SelectDateWidget())
-    end_date = forms.DateField(
-        label="Data fim", widget=forms.SelectDateWidget())
+    start_date = forms.DateField(label="Data início", widget=forms.SelectDateWidget())
+    end_date = forms.DateField(label="Data fim", widget=forms.SelectDateWidget())
     Pilot = forms.ModelChoiceField(
-        queryset=Pilot.objects.all(), required=False, label="Piloto (Selecionar para gerar relatório de voos do piloto no período)"
+        queryset=Pilot.objects.all(),
+        required=False,
+        label="Piloto (Selecionar para gerar relatório de voos do piloto no período)",
     )
 
     def clean(self):
@@ -187,3 +170,19 @@ class ReportForm(forms.Form):
                 "Data de início não pode ser maior ou igual data de fim"
             )
         return cleaned_data
+
+
+class EditStatusForm(forms.ModelForm):
+
+    status = forms.CharField(
+        label="Status", widget=forms.Select(choices=STATUS_CHOICES)
+    )
+
+    class Meta:
+        model = Flight
+        fields = ["status", "real_departure", "real_arrival"]
+        labels = {
+            "real_departure": "Partida Real (AAAA-MM-DD hh:mm)",
+            "real_arrival": "Chegada Real (AAAA-MM-DD hh:mm)",
+            "status": "Status",
+        }

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
+from .decorators import user_is_in_group
 from django.contrib import messages
 from .forms import (
     RegisterForm,
@@ -9,8 +11,9 @@ from .forms import (
     AirportForm,
     ReportForm,
     Editflightform,
+    EditStatusForm,
 )
-from Main.models import User_data, Flight, Pilot, Airline, Airport
+from .models import User_data, Flight, Pilot, Airline, Airport
 from django.http import FileResponse, HttpResponse
 import io
 import datetime
@@ -63,8 +66,9 @@ def createPDF(type, flights, pilot, start_date, end_date):
                 + flight.origin_airport.country
             )
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
-            lines.append("Chegada Estimada: "
-                         + str(flight.estimated_departure))
+            lines.append("Chegada Estimada: " + str(flight.estimated_departure))
+            lines.append("Partida Real: " + str(flight.real_departure))
+            lines.append("Chegada Real: " + str(flight.real_arrival))
             lines.append("")
 
     for line in lines:
@@ -79,21 +83,30 @@ def createPDF(type, flights, pilot, start_date, end_date):
 
 
 def signup(request):
+    def assign_user_to_group(user, group_name):
+        group_object = Group.objects.get_or_create(name=group_name.lower())[0]
+        user.groups.add(group_object)
+
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            User_data.objects.create(
+
+            user = User_data.objects.create(
                 user_id=form.instance.id,
                 cpf=form.data["cpf"],
                 profession=form.data["profession"],
             )
+
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
                     name=form.data["first_name"] + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
+
+            assign_user_to_group(user.user, form.data["profession"])
+
             return redirect("/")
     else:
         form = RegisterForm()
@@ -122,7 +135,8 @@ def home(request):
     return render(request, "home.html", {"form": form})
 
 
-@login_required
+@user_is_in_group(["operator"])
+@login_required(login_url="home/crud/")
 def crud(request):
     return render(request, "crud.html")
 
@@ -134,6 +148,7 @@ def panel(request):
 
 
 @login_required
+@user_is_in_group(["manager"])
 def reports(request):
     if request.method == "POST":
         data = request.POST
@@ -187,26 +202,47 @@ def reports(request):
             )
             if len(flights) == 0:
                 return HttpResponse("Não há voos no período selecionado")
-            file = createPDF(
-                2, flights, flights[0].pilot.name, start_date, end_date)
+            file = createPDF(2, flights, flights[0].airline.name, start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
     form = ReportForm()
     return render(request, "reports.html", {"form": form})
 
 
 @login_required
+@user_is_in_group(["pilot", "control", "worker"])
 def monitoring_update(request, flight_id):
+    # def which_transition(flight):
+    #     if flight.status == "Cadastrado":
+    #         flight.to_boarding_or_cancelled()
+    #     elif flight.status == "Embarcando":
+    #         flight.to_scheduled()
+
+    # def _check_real_departure_and_arrival(flight, form):
+    #     if flight.estimated_departure < form["real_departure"]:
+    #         return False
+    #     elif flight.estimated_arrival < form["real_arrival"]:
+    #         return False
+    #     elif form["real_departure"] > form["real_arrival"]:
+    #         return False
+
+    #     return True
+
     flight = Flight.objects.get(pk=flight_id)
-    form = Editflightform(request.POST or None, instance=flight)
+    form = EditStatusForm(request.POST or None, instance=flight)
     if request.method == "POST":
-        if request.method == "POST":
-            if form.is_valid():
-                form.save()
-            return redirect("/home")
+        flight.status = form.data["status"]
+        if form.data["real_departure"] and not flight.real_departure:
+            # if _check_real_departure_and_arrival(flight, form):
+            flight.real_departure = form.data["real_departure"]
+        if form.data["real_arrival"] and not flight.real_arrival:
+            flight.real_arrival = form.data["real_arrival"]
+        flight.save()
+        return redirect("/home")
     return render(request, "monitoring/monitoring_update.html", {"form": form})
 
 
 @login_required
+@user_is_in_group(["operator"])
 def flights_crud(request):
     if request.method == "POST":
         form = Newflightform(request.POST)
@@ -227,24 +263,28 @@ def flights_crud(request):
 
 
 @login_required
+@user_is_in_group(["operator", "worker", "pilot", "control"])
 def flights_update(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
     form = Editflightform(request.POST or None, instance=flight)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("/home")
+            return redirect("/home/flights_crud")
         else:
             return render(request, "flights/flights_update.html", {"form": form})
     return render(request, "flights/flights_update.html", {"form": form})
 
 
+@login_required
+@user_is_in_group(["operator"])
 def flights_delete(request, flight_id):
     Flight.objects.get(pk=flight_id).delete()
     return redirect("/home/flights_crud")
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airline_crud(request):
     if request.method == "POST":
         form = Newairlineform(request.POST)
@@ -258,6 +298,7 @@ def airline_crud(request):
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airline_update(request, airline_id):
     airline = Airline.objects.get(pk=airline_id)
     form = Newairlineform(request.POST or None, instance=airline)
@@ -268,12 +309,15 @@ def airline_update(request, airline_id):
     return render(request, "airlines/airline_update.html", {"form": form})
 
 
+@login_required
+@user_is_in_group(["operator"])
 def airline_delete(request, airline_id):
     Airline.objects.get(pk=airline_id).delete()
     return redirect("/home/airline_crud")
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airport_crud(request):
     if request.method == "POST":
         form = AirportForm(request.POST)
@@ -282,7 +326,6 @@ def airport_crud(request):
             return redirect("/home/airport_crud")
         form.airports = Airport.objects.all()
         return render(request, "airport_crud.html", {"form": form})
-
     else:
         form = AirportForm()
         form.airports = Airport.objects.all()
@@ -290,16 +333,21 @@ def airport_crud(request):
 
 
 @login_required
+@user_is_in_group(["operator"])
 def airport_update(request, airport_id):
-    airport = Airport.objects.get(pk=airport_id)
-    form = AirportForm(request.POST or None, instance=airport)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-        return redirect("/home/airport_crud")
-    return render(request, "airports/airport_update.html", {"form": form})
+    if Group.objects.get(name="operator") in request.user.groups.all():
+        airport = Airport.objects.get(pk=airport_id)
+        form = AirportForm(request.POST or None, instance=airport)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            return redirect("/home/airport_crud")
+        return render(request, "airports/airport_update.html", {"form": form})
+    else:
+        return HttpResponse("User is not authorized to access this page", status=403)
 
 
+@user_is_in_group(["operator"])
 def airport_delete(request, airport_id):
     Airport.objects.get(pk=airport_id).delete()
     return redirect("/home/airport_crud")
