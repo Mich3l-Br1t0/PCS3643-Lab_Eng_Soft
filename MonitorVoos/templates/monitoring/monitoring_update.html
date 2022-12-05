@@ -131,6 +131,11 @@
             </div>
         </nav>
     </div>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+    {% endif %}
     {% load widget_tweaks %}
     <div class="container">
         <form action="" method="POST">

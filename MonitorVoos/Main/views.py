@@ -66,7 +66,8 @@ def createPDF(type, flights, pilot, start_date, end_date):
                 + flight.origin_airport.country
             )
             lines.append("Partida Estimada: " + str(flight.estimated_arrival))
-            lines.append("Chegada Estimada: " + str(flight.estimated_departure))
+            lines.append("Chegada Estimada: "
+                         + str(flight.estimated_departure))
             lines.append("Partida Real: " + str(flight.real_departure))
             lines.append("Chegada Real: " + str(flight.real_arrival))
             lines.append("")
@@ -100,7 +101,8 @@ def signup(request):
 
             if form.data["profession"] == "Pilot":
                 Pilot.objects.create(
-                    name=form.data["first_name"] + " " + form.data["last_name"],
+                    name=form.data["first_name"]
+                    + " " + form.data["last_name"],
                     anac_code=form.data["anac_code"],
                     cpf=form.data["cpf"],
                 )
@@ -183,7 +185,9 @@ def reports(request):
                 ),
             )
             if len(flights) == 0:
-                return HttpResponse("Não há voos no período selecionado")
+                form = ReportForm(data)
+                form.add_error(None, "Não há dados disponíveis")
+                return render(request, "reports.html", {"form": form})
             file = createPDF(1, flights, "", start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
         else:
@@ -201,8 +205,11 @@ def reports(request):
                 pilot_id=data["Pilot"],
             )
             if len(flights) == 0:
-                return HttpResponse("Não há voos no período selecionado")
-            file = createPDF(2, flights, flights[0].airline.name, start_date, end_date)
+                form = ReportForm(data)
+                form.add_error(None, "Não há dados disponíveis")
+                return render(request, "reports.html", {"form": form})
+            file = createPDF(
+                2, flights, flights[0].pilot.name, start_date, end_date)
             return FileResponse(file, as_attachment=True, filename="MonitorVoos.pdf")
     form = ReportForm()
     return render(request, "reports.html", {"form": form})
@@ -211,33 +218,17 @@ def reports(request):
 @login_required
 @user_is_in_group(["pilot", "control", "worker"])
 def monitoring_update(request, flight_id):
-    # def which_transition(flight):
-    #     if flight.status == "Cadastrado":
-    #         flight.to_boarding_or_cancelled()
-    #     elif flight.status == "Embarcando":
-    #         flight.to_scheduled()
-
-    # def _check_real_departure_and_arrival(flight, form):
-    #     if flight.estimated_departure < form["real_departure"]:
-    #         return False
-    #     elif flight.estimated_arrival < form["real_arrival"]:
-    #         return False
-    #     elif form["real_departure"] > form["real_arrival"]:
-    #         return False
-
-    #     return True
-
     flight = Flight.objects.get(pk=flight_id)
     form = EditStatusForm(request.POST or None, instance=flight)
     if request.method == "POST":
-        flight.status = form.data["status"]
-        if form.data["real_departure"] and not flight.real_departure:
-            # if _check_real_departure_and_arrival(flight, form):
-            flight.real_departure = form.data["real_departure"]
-        if form.data["real_arrival"] and not flight.real_arrival:
-            flight.real_arrival = form.data["real_arrival"]
-        flight.save()
-        return redirect("/home")
+        if form.is_valid():
+            flight.status = form.data["status"]
+            if form.data["real_departure"] and not flight.real_departure:
+                flight.real_departure = form.data["real_departure"]
+            if form.data["real_arrival"] and not flight.real_arrival:
+                flight.real_arrival = form.data["real_arrival"]
+            flight.save()
+            return redirect("/home")
     return render(request, "monitoring/monitoring_update.html", {"form": form})
 
 
