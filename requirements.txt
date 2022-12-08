@@ -13,6 +13,7 @@ Django==4.0.3
 django-axes==5.39.0
 django-crispy-forms==1.14.0
 django-extensions==3.2.1
+django-fsm==2.8.1
 django-ipware==4.0.2
 django-widget-tweaks==1.4.12
 docutils==0.18.1
